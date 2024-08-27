@@ -1,0 +1,21 @@
+.form-line {
+    border: none;
+    border-bottom: 0.5px solid #757070;
+    border-radius: 0;
+    box-shadow: none;
+    padding-left: 0;
+}
+
+.form-line:focus {
+    box-shadow: none;
+    border-bottom: 2px solid #de5108;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.container {
+    max-width: 800px;
+}

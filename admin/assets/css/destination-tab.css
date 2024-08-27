@@ -1,0 +1,68 @@
+
+.card-margin {
+    margin-bottom: 1.875rem;
+}
+
+.card {
+    border: 0;
+    box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #ffffff;
+    background-clip: border-box;
+    border: 1px solid #e6e4e9;
+    border-radius: 8px;
+}
+
+.card .card-header.no-border {
+    border: 0;
+}
+
+.card-title{
+    margin-top: 20px;
+}
+
+.tab-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #de5108;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.tab-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 50px;
+    height: 3px;
+    background-color: #de5108;
+    border-radius: 2px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    font-size: 14px; /* Adjust the size as needed */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 14px; /* Adjust the size as needed */
+}
+
+
+.destination-section{
+    margin-top: 30px;
+}

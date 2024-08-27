@@ -1,0 +1,79 @@
+.fare-summary2{
+    margin-top: 50px;
+}
+
+.booking-box {
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.booking-box, .fare-summary {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.fare-item {
+    margin-bottom: 15px;
+}
+
+.fare-description {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.fare-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fare-amount, .fare-amount-right {
+    font-weight: normal;
+}
+
+.fare-amount-right {
+    font-weight: bold;
+}
+
+.subtotal {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.total-amount {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.terms-and-conditions {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.terms-and-conditions label {
+    display: flex;
+    align-items: center;
+}
+
+.terms-and-conditions input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.terms-and-conditions a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.terms-and-conditions a:hover {
+    text-decoration: underline;
+}
+
+.pay-now-btn {
+    margin-top: 10px;
+}

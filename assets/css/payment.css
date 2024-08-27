@@ -1,0 +1,28 @@
+.image-container {
+    text-align: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+.file-upload, .reference-number {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.fare-amount-right{
+    font-weight: bold;
+    font-size: 50px;
+    margin-top: -20px;
+    color: #de5108;
+}

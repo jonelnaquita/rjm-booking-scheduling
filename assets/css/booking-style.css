@@ -1,0 +1,39 @@
+/* Style for the circular buttons */
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #de5108;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+/* Hide the input field */
+#passenger-count {
+  display: none;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #de5108;
+  border-color: #de5108; }
+  .btn-primary:hover {
+    color: #fff;
+    background-color: #be4102;
+    border-color: #be4102; }
+  .btn-primary:focus, .btn-primary.focus {
+    -webkit-box-shadow: 0 0 0 3px rgba(0, 202, 76, 0.5);
+    box-shadow: 0 0 0 3px rgba(0, 202, 76, 0.5); }
+  .btn-primary.disabled, .btn-primary:disabled {
+    background-color: #de5108;
+    border-color: #de5108; }
+  .btn-primary:active, .btn-primary.active,
+  .show > .btn-primary.dropdown-toggle {
+    background-color: #de5108;
+    background-image: none;
+    border-color: #de5108;
+}

@@ -1,0 +1,106 @@
+.step-row {
+    background-color: #de5108; /* Background color of your choice */
+    color: #ffffff; /* Text color to ensure it contrasts with the background */
+    padding: 10px; /* Padding to add space around the text */
+    text-align: center; /* Center the text within the row */
+    width: 100vw; /* Full viewport width */
+    margin-left: calc(-100vw / 2 + 50%); /* Center the row */
+    margin-right: calc(-100vw / 2 + 50%); /* Center the row */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.date-wrapper {
+    margin: 0 auto; /* Center horizontally */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the content */
+    position: relative;
+    width: 100%; /* Take full width of the parent */
+    padding: 20px 0; /* Add some padding for spacing */
+}
+
+.date-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    padding: 10px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+    max-width: 1000px; /* Set a maximum width */
+    width: 100%; /* Take full width of the date-wrapper */
+    margin: 0 auto; /* Center the content */
+}
+
+.date-button {
+    flex: 0 0 auto; /* Prevent buttons from shrinking */
+    text-align: center;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    color: #0f0f0f;
+    background-color: #fcf9f9;
+    text-decoration: none;
+    white-space: nowrap; /* Prevent text wrapping */
+    height: 150px;
+    width: 150px;
+    display: flex;
+    flex-direction: column; /* Stack the day and date vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.date-day {
+    font-size: 27px; /* Larger font size for the day */
+    font-weight: bold; /* Bold text */
+    margin-bottom: -5px; /* Space between day and date */
+}
+
+.date-date {
+    font-size: 16px; /* Regular font size for the date */
+    font-weight: normal; /* Normal weight text */
+}
+
+.date-button:hover {
+    background-color: #de5108;
+    color: #ffffff;
+}
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #de5108;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+}
+.scroll-btn.left {
+    left: 0;
+}
+.scroll-btn.right {
+    right: 0;
+}
+
+.navbar {
+    position: relative;
+    z-index: 1000; 
+}
+
+.destination-route {
+    color: #de5108;
+    margin: 0;
+    font-size: 35px;
+    font-weight: bold; /* This makes the text bold */
+}
+
+.schedules{
+    margin-top: 30px;
+}
