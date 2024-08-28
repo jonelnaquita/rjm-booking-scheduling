@@ -43,7 +43,7 @@
         </div>
         <div class="form-group">
           <label>Province</label>
-          <select class="form-control province" name="provinces[]" id="province-input" required>
+          <select class="form-select province form-select-sm" name="provinces[]" id="province-input" required>
             <!-- Options will be dynamically added here -->
           </select>
         </div>

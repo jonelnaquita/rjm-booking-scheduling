@@ -1,0 +1,18 @@
+/* Centering text in Select2 dropdown */
+.select2-container .select2-selection--single {
+  display: flex;
+  align-items: center; /* Vertically center */
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+  text-align: left; /* Horizontally center text */
+  width: 100%; /* Ensure full width for proper centering */
+}
+
+.select2-container--default .select2-selection--single {
+  height: auto; /* Adjust height to fit content */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: normal; /* Adjust line height if needed */
+}

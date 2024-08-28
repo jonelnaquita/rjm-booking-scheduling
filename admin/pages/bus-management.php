@@ -31,17 +31,23 @@
                     <!-- Tab Indicator or Title -->
                     <h3 class="tab-title">Bus Management</h3>
 
-                    <div class="row" style="margin-bottom: 20px;">
-                        <div class="dropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Add Items </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
+                    <div class="row align-items-center" style="margin-bottom: 20px;">
+                        <div class="col-auto">
+                            <!-- Dropdown for Add Items -->
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Add Items
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
                                     <h6 class="dropdown-header">Add Items</h6>
                                     <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new-bus">New Bus</a>
                                     <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#bus-type">Bus Type</a>
                                     <div class="dropdown-divider"></div>
                                 </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <?php
                         include '../api/bus/fetch-buses.php';

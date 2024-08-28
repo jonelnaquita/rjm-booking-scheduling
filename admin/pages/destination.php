@@ -31,7 +31,6 @@
         .action-col {
             width: 50%; /* Adjust this percentage as needed */
         }
-
     </style>
 </head>
 <body>
