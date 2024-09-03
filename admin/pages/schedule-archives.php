@@ -28,26 +28,13 @@
                 <div class="content-wrapper">
 
                     <!-- Tab Indicator or Title -->
-                    <h3 class="tab-title">Travel Schedules</h3>
+                    <h3 class="tab-title">Schedule Archive</h3>
 
                     <div class="row" style="margin-bottom: 20px;">
-                        <!-- Left-aligned buttons -->
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-primary btn-icon-text" data-bs-toggle="modal" data-bs-target="#schedule-modal">
-                                <i class="ti-plus btn-icon-prepend"></i> Add Schedule
-                            </button>
-                        </div>
                         <div class="col-auto">
                             <button type="button" class="btn btn-outline-info btn-rounded btn-icon" id="filter-button">
                                 <i class="ti-filter"></i>
                             </button>
-                        </div>
-
-                        <!-- Right-aligned "Archive" button -->
-                        <div class="col-auto ms-auto">
-                            <a href="schedule-archives.php" type="button" class="btn btn-light btn-sm">
-                                <i class="ti-archive"></i> Archive
-                            </a>
                         </div>
                     </div>
 
@@ -98,18 +85,18 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Destination</th>
+                                    <th>Destination From</th>
+                                    <th>Destination To</th>
                                     <th>Departure Date</th>
                                     <th>Departure Time</th>
                                     <th>Bus Number</th>
                                     <th>Bus Type</th>
-                                    <th>Fare</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php include '../api/schedule/fetch-schedule-table.php'; ?> <!-- Adjust the path to where you save this PHP code -->
+                                <?php include '../api/schedule/fetch-schedule-table-archive.php'; ?> <!-- Adjust the path to where you save this PHP code -->
                             </tbody>
                         </table>
                     </div>
@@ -328,13 +315,12 @@ $(document).ready(function() {
         var departure_dates_str = $('#schedule-datepicker').val(); // This might be a comma-separated string
         var departure_time = $('#schedule-timepicker').val();
         var bus_id = $('.bus-number').val();
-        var fare = $('.fare').val();
 
         // Split the string into an array of dates
         var departure_dates = departure_dates_str.split(', '); // Split the dates by comma and space
 
         // Validate that all fields are filled in
-        if (!from_id || !to_id || !departure_dates.length || !departure_time || !bus_id || !fare) {
+        if (!from_id || !to_id || !departure_dates.length || !departure_time || !bus_id) {
             toastr.info('Please fill in all fields before saving the schedule.');
             return;
         }
@@ -349,8 +335,7 @@ $(document).ready(function() {
                     to_id: to_id,
                     departure_date: departure_date.trim(), // Trim any leading/trailing spaces
                     departure_time: departure_time,
-                    bus_id: bus_id,
-                    fare: fare
+                    bus_id: bus_id
                 },
                 success: function(response) {
                     console.log('Schedule saved for date: ' + departure_date);
@@ -367,7 +352,7 @@ $(document).ready(function() {
             location.reload(); // Refresh the page
         }, 1000);
     });
-}); 
+});
 </script>
 
 <!--Filter Table -->
@@ -403,34 +388,6 @@ $(document).ready(function() {
     });
 
 });
-</script>
-
-<!--Archive Schedule-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // AJAX request to archive schedules where departure_date is today
-        function archiveSchedules() {
-            fetch('../api/schedule/archive-schedules.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ action: 'archive' }) // Optional data to send
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Schedules successfully archived.');
-                } else {
-                    console.error('Error archiving schedules:', data.message);
-                }
-            })
-            .catch(error => console.error('Error in the AJAX request:', error));
-        }
-
-        // Call the function to archive schedules when the page loads
-        archiveSchedules();
-    });
 </script>
 
 

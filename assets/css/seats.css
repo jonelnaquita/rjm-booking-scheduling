@@ -83,9 +83,9 @@
 }
 
 .seat input[type="checkbox"]:checked + .seat-number {
-    background-color: #007bff;
+    background-color: green;
     color: white;
-    border-color: #007bff;
+    border-color: green;
 }
 
 @media (max-width: 576px) {
@@ -129,9 +129,9 @@
     }
     
     .seat input[type="checkbox"]:checked + .seat-number {
-        background-color: #007bff;
+        background-color: green;
         color: white;
-        border-color: #007bff;
+        border-color: green;
     }
 }
 

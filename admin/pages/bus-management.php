@@ -61,6 +61,7 @@
                                             <th></th>
                                             <th>Bus Number</th>
                                             <th>Type</th>
+                                            <th>Seats</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -78,6 +79,7 @@
                                                         </td>
                                                         <td>{$row['bus_number']}</td>
                                                         <td class='desc'>{$row['bus_type']}</td>
+                                                        <td class='desc'>{$row['seats']}</td>
                                                         <td>
                                                             <span class='block-email'>{$row['status']}</span>
                                                         </td>
@@ -325,6 +327,7 @@
     $('.add-new-bus').on('click', function() {
         let busNumber = $('input[name="bus-number"]').val().trim();
         let busTypeId = $('#bus-type-id').val();
+        let busSeats = $('input[name="bus-seats"]').val().trim();
 
         // Send the new bus data to the server via AJAX
         $.ajax({
@@ -332,7 +335,8 @@
             method: 'POST',
             data: {
                 bus_number: busNumber,
-                bustype_id: busTypeId
+                bustype_id: busTypeId,
+                busSeats: busSeats
             },
             success: function(response) {
                 if (response === "success") {

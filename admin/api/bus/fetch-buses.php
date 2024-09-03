@@ -5,6 +5,7 @@ $sql = "SELECT
             tblbus.bus_id,
             tblbus.bus_number,
             tblbus.status,
+            tblbus.seats,
             tblbustype.bus_type
         FROM 
             tblbus

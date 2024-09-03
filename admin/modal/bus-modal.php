@@ -52,16 +52,28 @@
       </div>
       <div class="modal-body">
 
-        <div class="form-group">
-          <label>Bus Number</label>
-          <input type="text" class="form-control form-control-sm" name="bus-number" placeholder="Enter Bus Number" required>
+        <div class="row">
+          <div class="form-group">
+            <label>Bus Number</label>
+            <input type="text" class="form-control form-control-sm" name="bus-number" placeholder="Enter Bus Number" required>
+          </div>
         </div>
-
-        <div class="form-group">
-            <label for="exampleFormControlSelect2">Bus Type</label>
-            <select class="form-select" id="bus-type-id" required>
-                <!-- Bus types will be dynamically loaded here -->
-            </select>
+        
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+                <label for="exampleFormControlSelect2">Bus Type</label>
+                <select class="form-select" id="bus-type-id" required>
+                    <!-- Bus types will be dynamically loaded here -->
+                </select>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>Bus Seats</label>
+              <input type="number" class="form-control form-control-sm" name="bus-seats" placeholder="Enter Bus Number" required>
+            </div>
+          </div>
         </div>
 
       </div>

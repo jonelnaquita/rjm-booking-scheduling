@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $departure_date = $_POST['departure_date'];
     $departure_time = $_POST['departure_time'];
     $bus_id = $_POST['bus_id'];
+    $fare = $_POST['fare'];
 
     // Validate that all fields have values
     if (empty($from_id) || empty($to_id) || empty($departure_date) || empty($departure_time) || empty($bus_id)) {
@@ -17,13 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Prepare the SQL statement
-    $query = "INSERT INTO tblschedule (destination_from, destination_to, departure_date, departure_time, bus_id) 
-              VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO tblschedule (destination_from, destination_to, departure_date, departure_time, fare, bus_id) 
+              VALUES (?, ?, ?, ?, ?, ?)";
 
     // Initialize the prepared statement
     if ($stmt = mysqli_prepare($conn, $query)) {
         // Bind the parameters to the SQL query
-        mysqli_stmt_bind_param($stmt, 'iisss', $from_id, $to_id, $departure_date, $departure_time, $bus_id);
+        mysqli_stmt_bind_param($stmt, 'iissss', $from_id, $to_id, $departure_date, $departure_time, $fare, $bus_id);
 
         // Execute the statement
         if (mysqli_stmt_execute($stmt)) {

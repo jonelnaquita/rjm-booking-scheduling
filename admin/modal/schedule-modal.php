@@ -37,6 +37,13 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="form-group">
+                <label for="fare">Fare</label>
+                <input type="number" class="form-control fare" name="fare" placeholder="₱"></input>
+            </div>
+        </div>
+
         <div class="form-group">
             <label>Bus Number</label>
             <select class="form-control bus-number" name="bus-number">

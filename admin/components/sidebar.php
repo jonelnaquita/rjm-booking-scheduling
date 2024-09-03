@@ -26,10 +26,17 @@
       </a>  
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="schedule.php" aria-expanded="false" aria-controls="form-elements">
+      <a class="nav-link" data-bs-toggle="collapse" href="#schedules" aria-expanded="false" aria-controls="schedules">
         <i class="icon-clock menu-icon"></i>
         <span class="menu-title">Schedules</span>
-      </a>  
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="schedules">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="schedule.php">View Schedules</a></li>
+          <li class="nav-item"> <a class="nav-link" href="schedule-archives.php">Archives</a></li>
+        </ul>
+      </div>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="bus-management.php" aria-expanded="false" aria-controls="charts">

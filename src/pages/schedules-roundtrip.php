@@ -28,7 +28,7 @@
     <!-- Step 1 Row -->
     <div class="row step-row">
         <div class="col-12 ">
-            <b>Step 1:</b> Choose a departure schedule
+            <b>Step 1:</b> Choose a arrival schedule
         </div>
     </div>
 
@@ -54,12 +54,12 @@
     <div class="row">
         <?php include '../api/fetch-destination.php'?>
         <div class="col-12 destination">
-            <p class="destination-route"><?php echo $from_name; ?> &gt; <?php echo $to_name; ?></p>
+            <p class="destination-route"><?php echo $to_name; ?> &gt; <?php echo $from_name; ?></p>
         </div>
 
         <div class="col-12 details">
             <div class="detail-item">
-                <span id="booking-date"><?php echo $date_departure ?></span> | 
+                <span id="booking-date"><?php echo $date_arrival ?></span> | 
                 <span id="round-trip"><?php echo $direction ?></span> | 
                 Total Passengers: <span id="total-passengers"><?php echo $passenger ?></span>
             </div>
@@ -112,8 +112,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const selectedDate = "<?php echo $date_departure; ?>"; // Get the selected date from PHP
-    const direction = "<?php echo $direction; ?>";
+    const selectedDate = "<?php echo $date_arrival; ?>"; // Get the selected date from PHP
 
     // Convert selectedDate to a consistent format (YYYY-MM-DD)
     const [month, day, year] = selectedDate.split('/');
@@ -136,8 +135,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         button.addEventListener('click', function(event) {
             event.preventDefault();
+
+            // Remove the active class from all buttons
             dateButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Add the active class to the clicked button
             this.classList.add('active');
+
+            // Fetch and display schedules for the clicked date
             loadSchedulesForDate(buttonDate);
         });
     });
@@ -152,26 +157,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const destinationFrom = encodeURIComponent("<?php echo $_SESSION['booking']['destination_from'] ?? ''; ?>");
         const destinationTo = encodeURIComponent("<?php echo $_SESSION['booking']['destination_to'] ?? ''; ?>");
 
-        fetch(`../api/fetch-schedule.php?date=${date}&destination_from=${destinationFrom}&destination_to=${destinationTo}`)
+        fetch(`../api/fetch-schedule.php?date=${date}&destination_from=${destinationTo}&destination_to=${destinationFrom}`)
             .then(response => response.json())
             .then(data => {
                 let tableBody = document.getElementById('schedule-table-body');
                 tableBody.innerHTML = ''; // Clear previous entries
 
                 data.forEach(schedule => {
-                    let href;
-                    if (direction === 'Round-Trip') {
-                        href = `schedules-roundtrip.php?scheduleDeparture_id=${schedule.schedule_id}`;
-                    } else {
-                        href = `passenger-form.php?scheduleDeparture_id=${schedule.schedule_id}`;
-                    }
-
                     let row = `<tr>
                         <td>${schedule.departure_time}</td>
                         <td>${schedule.bus_type}</td>
                         <td>${schedule.seats}</td>
                         <td>₱${schedule.fare}</td>
-                        <td><a href='${href}' class='btn btn-primary'>Book</a></td>
+                        <td><a href='passenger-form.php?scheduleArrival_id=${schedule.schedule_id}' class='btn btn-primary'>Book</a></td>
                     </tr>`;
                     tableBody.insertAdjacentHTML('beforeend', row);
                 });

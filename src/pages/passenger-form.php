@@ -2,6 +2,7 @@
 <html lang="en">
 <?php
     include '../components/header.php';
+    include '../api/store-schedule.php';
 ?>
 <body>
     <?php
