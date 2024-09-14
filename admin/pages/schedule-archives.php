@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+    include '../api/session.php';
     include '../../models/conn.php';
     include '../components/header.php';
 ?>
@@ -92,7 +93,6 @@
                                     <th>Bus Number</th>
                                     <th>Bus Type</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>

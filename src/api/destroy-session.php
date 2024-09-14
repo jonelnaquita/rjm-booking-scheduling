@@ -5,6 +5,9 @@ session_start();
 // Clear all session variables
 $_SESSION = [];
 
+// Set a flag indicating the session has been destroyed
+$_SESSION['destroyed'] = true;
+
 // If you want to destroy the session entirely, uncomment the following lines
 if (ini_get("session.use_cookies")) {
     // Get session parameters
@@ -19,4 +22,8 @@ if (ini_get("session.use_cookies")) {
 
 // Destroy the session
 session_destroy();
+
+// Start a new session to store the 'destroyed' flag
+session_start();
+$_SESSION['destroyed'] = true;
 ?>

@@ -28,32 +28,62 @@
                         <div class="seat conductor-seat">Conductor</div>
                         <div class="seat"></div>
 
-                        <?php
+                       <?php
+                        include_once '../../models/conn.php';
 
-                            echo '<div class="seat-selection">';
+                        // Assuming you have $schedule_id and $seats already set
+                        // Fetch booked seat numbers and booking statuses for the current schedule
+                        $query = "SELECT s.seat_number, b.status 
+                                FROM tblseats s
+                                LEFT JOIN tblbooking b ON s.passenger_id = b.passenger_id
+                                WHERE s.schedule_id = '$schedule_id'";
+                        $result = mysqli_query($conn, $query);
 
-                            for ($i = 1; $i <= $seats; $i++) {
-                                // Start a new row every 4 seats
-                                if ($i % 4 == 1) {
-                                    echo '<div class="seat-row row">';
-                                }
+                        $bookedSeats = [];
+                        if ($result) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $seatNumber = $row['seat_number'];
+                                $status = $row['status'];
+                                $bookedSeats[$seatNumber] = $status;  // Store status based on seat number
+                            }
+                        }
 
-                                // Generate the seat checkboxes
-                                echo '<div class="seat-pair">';
-                                echo '<label class="seat">';
-                                echo '<input type="checkbox" name="seat[]" value="' . $i . '" class="seat-checkbox">';
-                                echo '<span class="seat-number">' . $i . '</span>';
-                                echo '</label>';
-                                echo '</div>';
+                        echo '<div class="seat-selection">';
 
-                                // Close the row after every 4 seats or at the last seat
-                                if ($i % 4 == 0 || $i == $seats) {
-                                    echo '</div>'; // Close the row
+                        for ($i = 1; $i <= $seats; $i++) {
+                            // Start a new row every 4 seats
+                            if ($i % 4 == 1) {
+                                echo '<div class="seat-row row">';
+                            }
+
+                            // Determine if the current seat is booked and its status
+                            $disabled = isset($bookedSeats[$i]) ? 'disabled' : '';  // Disable the seat if booked
+                            $statusClass = '';  // Class for styling based on status
+                            
+                            if (isset($bookedSeats[$i])) {
+                                if ($bookedSeats[$i] == 'Pending') {
+                                    $statusClass = 'pending-seat';  // For "Pending" status (orange)
+                                } elseif ($bookedSeats[$i] == 'Confirmed') {
+                                    $statusClass = 'confirmed-seat';  // For "Confirmed" status (red)
                                 }
                             }
 
-                            echo '</div>'; // Close the seat-selection container
-                            ?>
+                            // Generate the seat checkboxes
+                            echo '<div class="seat-pair">';
+                            echo '<label class="seat ' . $statusClass . '">';  // Add class based on status
+                            echo '<input type="checkbox" name="seat[]" value="' . $i . '" class="seat-checkbox" ' . $disabled . '>';
+                            echo '<span class="seat-number">' . $i . '</span>';
+                            echo '</label>';
+                            echo '</div>';
+
+                            // Close the row after every 4 seats or at the last seat
+                            if ($i % 4 == 0 || $i == $seats) {
+                                echo '</div>'; // Close the row
+                            }
+                        }
+
+                        echo '</div>'; // Close the seat-selection container
+                        ?>
 
                             <!-- JavaScript to limit the selection -->
                             <script>
@@ -104,7 +134,7 @@
                         </div> -->
                     </div>
                     <div class="save-button-container">
-                        <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary save-departure" data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>

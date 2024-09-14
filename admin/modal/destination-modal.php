@@ -41,12 +41,6 @@
           <label>Destination</label>
           <input type="text" class="form-control form-control-sm" name="destination" id="destination-input" placeholder="Destination" aria-label="destination" required>
         </div>
-        <div class="form-group">
-          <label>Province</label>
-          <select class="form-select province form-select-sm" name="provinces[]" id="province-input" required>
-            <!-- Options will be dynamically added here -->
-          </select>
-        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -56,30 +50,6 @@
   </div>
 </div>
 
-
-
-
-<!--Province Modal -->
-<div class="modal fade" id="add-province" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Add Province</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Province</label>
-          <input type="text" class="form-control form-control-sm" name="province" placeholder="Province Name" aria-label="province" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary save-province">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 <!--Delete Drop Off Destination-->

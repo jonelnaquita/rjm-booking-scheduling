@@ -30,11 +30,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap4.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.1/css/buttons.bootstrap4.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/staterestore/1.4.1/css/stateRestore.bootstrap4.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.bootstrap4.css">
 
     <!--DateTime Picker-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-
 
 
 
@@ -86,7 +85,8 @@
     <script src="https://cdn.datatables.net/staterestore/1.4.1/js/stateRestore.bootstrap4.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.bootstrap4.js"></script>
-
+    <script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.js"></script>
+    <script src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.bootstrap4.js"></script>
     <!--DateTime Picker-->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>

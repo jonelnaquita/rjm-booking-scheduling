@@ -15,7 +15,8 @@
       <div class="collapse" id="bookings">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="booking.php">View Bookings</a></li>
-          <li class="nav-item"> <a class="nav-link" href="cancellation.php">Cancellations</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking-confirmed.php">Confirmed</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking-cancellation.php">Cancellations</a></li>
         </ul>
       </div>
     </li>
@@ -51,12 +52,6 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="payment.php" aria-expanded="false" aria-controls="icons">
-        <i class="icon-briefcase menu-icon"></i>
-        <span class="menu-title">Payments</span>
-      </a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" href="#reports" aria-expanded="false" aria-controls="reports">
         <i class="icon-folder menu-icon"></i>
         <span class="menu-title">Reports</span>
@@ -70,7 +65,7 @@
       </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+      <a class="nav-link" href="settings.php" aria-expanded="false" aria-controls="auth">
         <i class="icon-server menu-icon"></i>
         <span class="menu-title">Settings</span>
       </a>

@@ -181,3 +181,16 @@
 .saved-seat {
     background-color: orange;
 }
+
+
+/* Orange for Pending seats */
+.pending-seat .seat-checkbox+.seat-number {
+    background-color: orange;
+    color: white;
+}
+
+/* Red for Confirmed seats */
+.confirmed-seat .seat-checkbox+.seat-number {
+    background-color: red;
+    color: white;
+}

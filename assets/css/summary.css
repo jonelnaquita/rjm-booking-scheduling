@@ -6,13 +6,15 @@
     border: 1px solid #ddd; /* Light border */
     border-radius: 8px; /* Rounded corners */
     width: 100%;
-    margin-bottom: 50px;
 }
 
-.booking-box, .fare-summary {
+.booking-box {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
+    border-radius: 8px; /* Rounded corners */
+    width: 100%;
+    margin-bottom: 50px;
 }
 
 .fare-item {

@@ -1,4 +1,4 @@
-<?php include '../api/fetch-departure-details.php';?>
+<?php include '../api/fetch-arrival-details.php';?>
 
 <!-- Modal -->
 <div class="modal fade" id="arrival-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -29,6 +29,24 @@
                         <div class="seat"></div>
 
                         <?php
+                            include_once '../../models/conn.php';
+
+                            // Assuming you have $schedule_id and $seats already set
+                            // Fetch booked seat numbers and booking statuses for the current schedule
+                            $query = "SELECT s.seat_number, b.status 
+                                    FROM tblseats s
+                                    LEFT JOIN tblbooking b ON s.passenger_id = b.passenger_id
+                                    WHERE s.schedule_id = '$schedule_id'";
+                            $result = mysqli_query($conn, $query);
+
+                            $bookedSeats = [];
+                            if ($result) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $seatNumber = $row['seat_number'];
+                                    $status = $row['status'];
+                                    $bookedSeats[$seatNumber] = $status;  // Store status based on seat number
+                                }
+                            }
 
                             echo '<div class="seat-selection">';
 
@@ -38,10 +56,22 @@
                                     echo '<div class="seat-row row">';
                                 }
 
+                                // Determine if the current seat is booked and its status
+                                $disabled = isset($bookedSeats[$i]) ? 'disabled' : '';  // Disable the seat if booked
+                                $statusClass = '';  // Class for styling based on status
+                                
+                                if (isset($bookedSeats[$i])) {
+                                    if ($bookedSeats[$i] == 'Pending') {
+                                        $statusClass = 'pending-seat';  // For "Pending" status (orange)
+                                    } elseif ($bookedSeats[$i] == 'Confirmed') {
+                                        $statusClass = 'confirmed-seat';  // For "Confirmed" status (red)
+                                    }
+                                }
+
                                 // Generate the seat checkboxes
                                 echo '<div class="seat-pair">';
-                                echo '<label class="seat">';
-                                echo '<input type="checkbox" name="seat[]" value="' . $i . '" class="seat-checkbox">';
+                                echo '<label class="seat ' . $statusClass . '">';  // Add class based on status
+                                echo '<input type="checkbox" name="seat[]" value="' . $i . '" class="seat-checkbox" ' . $disabled . '>';
                                 echo '<span class="seat-number">' . $i . '</span>';
                                 echo '</label>';
                                 echo '</div>';
@@ -75,36 +105,9 @@
                                 });
                             </script>
 
-                        <!-- Row 11 (Last Row)
-                        <div class="seat-row last-row">
-                            <div class="seat-pair">
-                                <label class="seat">
-                                    <input type="checkbox" name="seat" value="45">
-                                    <span class="seat-number">41</span>
-                                </label>
-                                <label class="seat">
-                                    <input type="checkbox" name="seat" value="46">
-                                    <span class="seat-number">42</span>
-                                </label>
-                            </div>
-                            <div class="seat-pair">
-                                <label class="seat">
-                                    <input type="checkbox" name="seat" value="47">
-                                    <span class="seat-number">43</span>
-                                </label>
-                                <label class="seat">
-                                    <input type="checkbox" name="seat" value="48">
-                                    <span class="seat-number">44</span>
-                                </label>
-                            </div>
-                            <label class="seat">
-                                <input type="checkbox" name="seat" value="49">
-                                <span class="seat-number">45</span>
-                            </label>
-                        </div> -->
                     </div>
                     <div class="save-button-container">
-                        <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary save-arrival" data-dismiss="modal">Save</button>
                     </div>
                 </div>
             </div>

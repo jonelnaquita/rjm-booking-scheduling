@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     let row = `<tr>
                         <td>${schedule.departure_time}</td>
                         <td>${schedule.bus_type}</td>
-                        <td>${schedule.seats}</td>
+                        <td>${schedule.available_seats}</td>
                         <td>₱${schedule.fare}</td>
                         <td><a href='${href}' class='btn btn-primary'>Book</a></td>
                     </tr>`;

@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+    include '../api/session.php';
     include '../../models/conn.php';
     include '../components/header.php';
 ?>
@@ -55,13 +56,7 @@
 
                     <div class="row">
                         <div class="dropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Add Items </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-                            <h6 class="dropdown-header">Add Items</h6>
-                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add-destination">Destinations</a>
-                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add-province">Province</a>
-                            <div class="dropdown-divider"></div>
-                            </div>
+                            <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="modal" data-bs-target="#add-destination" aria-expanded="false"> Add Items </button>
                         </div>
                     </div>
 
@@ -78,7 +73,7 @@
                                     <div class="card-body pt-0">
                                         <div class="widget-49">
                                             <h5 class="card-title"><?php echo htmlspecialchars($row['from_name']); ?></h5>
-                                            <p class="card-text" style="margin-top: -15px;"><?php echo htmlspecialchars($row['province_name']); ?></p>
+                                            <!--<p class="card-text" style="margin-top: -15px;"></?php echo htmlspecialchars($row['province_name']); ?></p>-->
                                             <div class="card-description" style="display: none;">
                                                 <div class="table-responsive">
                                                 <table class="table">
@@ -283,120 +278,25 @@ $(document).ready(function() {
 </script>
 
 
-<!--Add Province-->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle the click event for the 'Save' button in the modal
-    document.querySelector('#add-province .save-province').addEventListener('click', function() {
-        // Get the value from the input field
-        var provinceName = document.querySelector('input[name="province"]').value.trim();
-
-        // Check if the input is empty
-        if (!provinceName) {
-            toastr.error('Please enter a province name.');
-            return; // Prevent the form from submitting
-        }
-
-        // Prepare data to be sent
-        var data = {
-            province: provinceName
-        };
-
-        // Perform AJAX request
-        fetch('../api/destination/add-province.php', { // Update the path to your PHP script
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                toastr.success(result.message);
-                $('#add-province').modal('hide'); // Hide the modal
-                // Optionally, refresh data or update UI here
-            } else {
-                toastr.error(result.message);
-            }
-        })
-        .catch(error => {
-            toastr.error('An error occurred. Please try again.');
-            console.error('Error:', error);
-        });
-    });
-});
-</script>
-
-<!--Fetch Provinces-->
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    $('.province').select2({
-        dropdownParent: $('#add-destination'),
-        width: '100%'
-    });
-    // Function to fetch and display provinces
-    function loadProvinces() {
-        // Perform AJAX request to fetch provinces
-        fetch('../api/destination/fetch-province.php') // Update the path to your PHP script
-            .then(response => response.json())
-            .then(provinces => {
-                const provinceSelect = document.querySelector('.province');
-
-                // Clear any existing options
-                provinceSelect.innerHTML = '';
-
-                // Add a default "Select Province" option
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = '';
-                provinceSelect.appendChild(defaultOption);
-
-                // Loop through the provinces and add them as options
-                provinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province.id;
-                    option.textContent = province.province;
-                    provinceSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching provinces:', error);
-            });
-    }
-
-    // Load provinces when the page is ready
-    loadProvinces();
-});
-</script>
-
 
 <!--Save Destination Entry-->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the select2 for the province
-    $('.province').select2({
-        dropdownParent: $('#add-destination'),
-        width: '100%'
-    });
 
     // Handle the save button click event
     document.querySelector('.save-destination').addEventListener('click', function() {
         // Get values from the input fields
         var destination = document.querySelector('#destination-input').value;
-        var province = document.querySelector('#province-input').value;
 
         // Check if destination and province have values
-        if (!destination || !province) {
+        if (!destination) {
             toastr.error('Please fill out all required fields.');
             return;
         }
 
         // Prepare the data to be sent
         var data = {
-            destination: destination,
-            province: province
+            destination: destination
         };
 
         // Perform AJAX request

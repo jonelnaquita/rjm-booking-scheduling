@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+    include '../api/session.php';
     include '../../models/conn.php';
     include '../components/header.php';
 ?>

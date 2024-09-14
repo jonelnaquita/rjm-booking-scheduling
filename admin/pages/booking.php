@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+    include '../api/session.php';
     include '../../models/conn.php';
     include '../components/header.php';
 ?>
@@ -9,6 +10,7 @@
 
     <link rel="stylesheet" href="../assets/css/destination-tab.css">
     <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/booking.css">
 
 <script>
 
@@ -35,121 +37,120 @@ $(document).ready(function() {
                 include '../components/sidebar.php';
             ?>
 
-
             <div class="main-panel">
                 <div class="content-wrapper">
-
                     <!-- Tab Indicator or Title -->
                     <h3 class="tab-title">Bookings</h3>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive table-responsive-data2">
-                                <table id="table-example" class="table table-data2  nowrap" style="margin-top: 20px; margin-bottom: 20px;">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <label class="au-checkbox">
-                                                    <input type="checkbox">
-                                                    <span class="au-checkmark"></span>
-                                                </label>
-                                            </th>
-                                            <th>Book ID</th>
-                                            <th>Full Name</th>
-                                            <th>Destination</th>
-                                            <th>Schedule</th>
-                                            <th>Bus</th>
-                                            <th>Travel Cost</th>
-                                            <th>Passengers</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="tr-shadow">
-                                            <td>
-                                                <label class="au-checkbox">
-                                                    <input type="checkbox">
-                                                    <span class="au-checkmark"></span>
-                                                </label>
-                                            </td>
-                                            <td>Lori Lynch</td>
-                                            <td>
-                                                <span class="block-email">lori@example.com</span>
-                                            </td>
-                                            <td class="desc">Samsung S8 Black</td>
-                                            <td>2018-09-27 02:12</td>
-                                            <td>
-                                                <span class="status--process">Processed</span>
-                                            </td>
-                                            <td>$679.00</td>
-                                            <td>3</td>
-                                            <td>Pending</td>
-                                            <td>
-                                                <div class="table-data-feature">
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Send">
-                                                        <i class="zmdi zmdi-mail-send"></i>
-                                                    </button>
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                        <i class="zmdi zmdi-edit"></i>
-                                                    </button>
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                        <i class="zmdi zmdi-delete"></i>
-                                                    </button>
-                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="More">
-                                                        <i class="zmdi zmdi-more"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- END DATA TABLE -->
-
+                        <div class="table-responsive ">
+                            <table id="table-example" class="table table-data2 nowrap dt-responsive w-100" style="margin-top: 20px; margin-bottom: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Book ID</th>
+                                        <th>Full Name</th>
+                                        <th>Destination</th>
+                                        <th>Schedule</th>
+                                        <th>Bus</th>
+                                        <th>Travel Cost</th>
+                                        <th>Passengers</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        include '../api/booking/fetch-booking-list.php';
+                                    ?>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-
+                        <!-- END DATA TABLE -->
                 </div>
 
 
             <!--Include Footer -->
             <?php
                 include '../components/footer.php';
+                include '../modal/booking-modal.php';
             ?>
 
             </div>
         </div>
-      <!-- page-body-wrapper ends -->
     </div>
 </body>
 
+
 <script>
-        new DataTable('#example', {
-    layout: {
-        topStart: {
-            buttons: [
-                {
-                    extend: 'createState',
-                    config: {
-                        creationModal: true,
-                        toggle: {
-                            columns: {
-                                search: true,
-                                visible: true
-                            },
-                            length: true,
-                            order: true,
-                            paging: true,
-                            search: true
-                        }
-                    }
-                },
-                'savedStates'
-            ]
+$(document).on('click', '.btn-accept', function() {
+    // Get the booking ID from the data-book-id attribute
+    var book_id = $(this).data('book-id');
+
+    // Log the booking ID to ensure it's being retrieved correctly
+    console.log('Booking ID:', book_id);
+
+    // Send AJAX request to fetch payment details
+    $.ajax({
+        url: '../api/booking/get-payment-details.php', // Adjust path to your API
+        type: 'POST',
+        data: { book_id: book_id },
+        dataType: 'json',
+        success: function(response) {
+            console.log('AJAX response:', response); // Log the response to check the data
+
+            if (response.success) {
+                // Populate the modal with the fetched details
+                var modalBody = `
+                    <h2 class="modal-total-amount">Total Amount: ₱${response.data.price}</h2>
+                    <h5 class="modal-reference-number">Reference Number: ${response.data.reference_number}</h5>
+                    <img src="../../src/payment/${response.data.screenshot_filename}" alt="Screenshot" class="modal-screenshot img-fluid" />
+                `;
+                $('#accept-booking-modal .modal-body').html(modalBody);
+
+                $('#confirm-booking-modal .booking_id').val(book_id);
+                $('#confirm-booking-modal .passenger-id').html(book_id);
+            } else {
+                alert('No payment details found.');
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Log the full error details for debugging
+            console.error('Error fetching payment details:', textStatus, errorThrown);
+            console.log('Response text:', jqXHR.responseText);
         }
-    }
+    });
 });
-  </script>
+
+</script>
+
+<!-- Confirm Booking -->
+<script>
+    $('#confirmBooking').on('click', function() {
+        let bookingId = $('.booking_id').val(); // Get the booking ID
+
+        $.ajax({
+            url: '../api/booking/confirm-booking.php',  // Point to your PHP file for sending email
+            type: 'POST',
+            data: { booking_id: bookingId },
+            success: function(response) {
+                // Close the modal
+                $('#confirm-booking-modal').modal('hide');
+
+                // Show a toastr success message
+                toastr.success('Booking confirmed and e-ticket sent successfully!', 'Success');
+                location.reload();
+            },
+            error: function() {
+                // Close the modal in case of error
+                $('#confirm-booking-modal').modal('hide');
+
+                // Show an error toastr message
+                toastr.error('An error occurred. Please try again.', 'Error');
+            }
+        });
+    });
+</script>
+
+
 
 </html>

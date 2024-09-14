@@ -173,13 +173,48 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
   }
   ThumbnailOpacity();
 
-  var datePicker = function() {
-		$('#probootstrap-date-departure, #probootstrap-date-arrival').datepicker({
-		  'format': 'm/d/yyyy',
-		  'autoclose': true
-		});
-	};
-	datePicker();
+
+var datePicker = function() {
+    // Fetch available dates via AJAX
+    $.ajax({
+        url: '../../src/api/fetch-available-dates.php', // Adjust path as needed
+        method: 'GET',
+        dataType: 'json',
+        success: function(availableDates) {
+            $('#probootstrap-date-departure, #probootstrap-date-arrival').datepicker({
+                format: 'mm/dd/yyyy', // Use the same format as your PHP script
+                autoclose: true,
+                startDate: new Date(), // Disable past dates
+                beforeShowDay: function(date) {
+                    var formattedDate = ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
+                                        ('0' + date.getDate()).slice(-2) + '/' + 
+                                        date.getFullYear();
+
+                    // Check if the current date is in the availableDates array
+                    if (availableDates.indexOf(formattedDate) !== -1) {
+                        return { enabled: true }; // Enable the date
+                    } else {
+                        return { enabled: false }; // Disable the date
+                    }
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error("An error occurred: " + status + " " + error);
+            // Initialize datepicker without date restrictions if AJAX fails
+            $('#probootstrap-date-departure, #probootstrap-date-arrival').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true,
+                startDate: new Date()
+            });
+        }
+    });
+};
+
+$(document).ready(function() {
+    datePicker();
+});
+
 
 
 });

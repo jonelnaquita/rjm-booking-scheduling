@@ -5,6 +5,7 @@
     include '../api/fetch-schedules-function.php';
     include '../components/header.php';
 
+
     // Fetch unique dates for the date wrapper
     $dates = fetchUniqueDates($conn);
 ?>
@@ -167,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     let row = `<tr>
                         <td>${schedule.departure_time}</td>
                         <td>${schedule.bus_type}</td>
-                        <td>${schedule.seats}</td>
+                        <td>${schedule.available_seats}</td>
                         <td>₱${schedule.fare}</td>
                         <td><a href='passenger-form.php?scheduleArrival_id=${schedule.schedule_id}' class='btn btn-primary'>Book</a></td>
                     </tr>`;

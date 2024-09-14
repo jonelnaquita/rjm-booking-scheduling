@@ -24,7 +24,7 @@
         WHERE
             s.sched_status = 'Archived'
         ORDER BY 
-            s.schedule_id ASC
+            s.departure_date DESC
     ";
 
     $result = mysqli_query($conn, $query);
@@ -41,16 +41,6 @@
             echo "<td>" . htmlspecialchars($row['bus_number']) . "</td>";
             echo "<td>" . htmlspecialchars($row['bus_type']) . "</td>";
             echo "<td> <label class='badge badge-success'>". htmlspecialchars($row['sched_status']) ."</label></td>";
-            echo "<td>
-                    <div class='table-data-feature'>
-                        <button class='item' data-toggle='tooltip' data-placement='top' title='Edit' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
-                            <i class='mdi mdi-file'></i>
-                        </button>
-                        <button class='item' data-toggle='tooltip' data-placement='top' title='Delete' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
-                            <i class='mdi mdi-delete'></i>
-                        </button>
-                    </div>
-                  </td>";
             echo "</tr>";
             $counter++;
         }

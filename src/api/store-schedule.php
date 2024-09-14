@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-
-// Handle session data for 'schedule_departure'
-// Retrieve schedule_id from the URL
 if(isset($_GET['scheduleDeparture_id'])) {
     $scheduleDeparture_id = $_GET['scheduleDeparture_id'];
 
@@ -22,7 +19,7 @@ if (isset($_SESSION['schedule_departure']) && !empty($_SESSION['schedule_departu
 }
 
 // Display the departure schedule ID if available
-echo "Departure Schedule ID: " . (isset($scheduleDeparture_id) ? htmlspecialchars($scheduleDeparture_id) : 'Not available') . "<br>";
+// echo "Departure Schedule ID: " . (isset($scheduleDeparture_id) ? htmlspecialchars($scheduleDeparture_id) : 'Not available') . "<br>";
 
 
 // Retrieve 'schedule_id' from the URL, if it exists
@@ -45,7 +42,7 @@ if (isset($_SESSION['schedule_arrival']) && !empty($_SESSION['schedule_arrival']
 }
 
 // Display the arrival schedule ID if available
-echo "Arrival Schedule ID: " . (isset($scheduleArrival_id) ? htmlspecialchars($scheduleArrival_id) : 'Not available') . "<br>";
+// echo "Arrival Schedule ID: " . (isset($scheduleArrival_id) ? htmlspecialchars($scheduleArrival_id) : 'Not available') . "<br>";
 
 
 // Check if booking details are set in the session
@@ -60,11 +57,13 @@ if(isset($_SESSION['booking'])) {
     $passenger = $booking['passenger'];
 
     // Now, you can use these values along with schedule_id
+    /*
     echo "Direction: " . htmlspecialchars($direction) . "<br>";
     echo "From: " . htmlspecialchars($destination_from) . "<br>";
     echo "To: " . htmlspecialchars($destination_to) . "<br>";
     echo "Departure Date: " . htmlspecialchars($date_departure) . "<br>";
     echo "Arrival Date: " . htmlspecialchars($date_arrival) . "<br>";
     echo "Number of Passengers: " . htmlspecialchars($passenger) . "<br>";
+    */
 }
 ?>

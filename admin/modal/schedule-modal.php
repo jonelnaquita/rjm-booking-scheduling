@@ -8,6 +8,13 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
+            <label>Bus Number</label>
+            <select class="form-control bus-number" name="bus-number">
+                <!-- Options will be dynamically added here -->
+            </select> 
+        </div>
+        
+        <div class="form-group">
             <label>Destination From</label>
             <select class="form-control destination-from" name="destination-from">
                 <!-- Options will be dynamically added here -->
@@ -42,13 +49,6 @@
                 <label for="fare">Fare</label>
                 <input type="number" class="form-control fare" name="fare" placeholder="₱"></input>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label>Bus Number</label>
-            <select class="form-control bus-number" name="bus-number">
-                <!-- Options will be dynamically added here -->
-            </select> 
         </div>
     </div>
     <div class="modal-footer">
