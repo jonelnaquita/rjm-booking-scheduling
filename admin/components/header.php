@@ -35,8 +35,6 @@
     <!--DateTime Picker-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-
-
     <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
     <script src="../assets/vendors/chart.js/chart.umd.js"></script>
     <script src="../assets/vendors/datatables.net/jquery.dataTables.js"></script>
@@ -57,6 +55,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!--Text Effects-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+
 
     <script>
       toastr.options = {
@@ -90,7 +93,7 @@
     <!--DateTime Picker-->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
-
+    
 
 
   </head>

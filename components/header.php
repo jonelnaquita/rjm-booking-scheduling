@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="assets/fonts/flaticon/font/flaticon.css">
 
     <link rel="stylesheet" href="assets/fonts/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="assets/css/select2.css">
     
 
@@ -26,14 +25,12 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/booking-style.css">
 
-
     <script src="assets/js/jquery.min.js"></script>
     
     <script src="assets/js/popper.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
 
-    <script src="assets/js/bootstrap-datepicker.js"></script>
     <script src="assets/js/jquery.waypoints.min.js"></script>
     <script src="assets/js/jquery.easing.1.3.js"></script>
 

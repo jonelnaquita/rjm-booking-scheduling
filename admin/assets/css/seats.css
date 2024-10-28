@@ -1,0 +1,123 @@
+/* Pick Seat Modal */
+
+.seat-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    /* Centers the grid */
+}
+
+.seat-row {
+    display: flex;
+    width: calc(100% - 10px);
+    /* Full width minus gap */
+    gap: 10px;
+    /* Space between seats */
+}
+
+/* Each seat takes up 20% of the width for 4 seats per row */
+.seat {
+    flex: 0 0 20%;
+    /* Fixed width for 4 seats */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Media query for the last row to handle 5 seats */
+@media (max-width: 576px) {
+    .seat {
+        flex: 0 0 20%;
+        /* For smaller screens, maintain 4 seats */
+    }
+}
+
+.seat input[type="checkbox"] {
+    display: none;
+    /* Hide checkboxes */
+}
+
+.seat-number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+    /* Prevents text selection */
+}
+
+.seat input[type="checkbox"]:checked+.seat-number {
+    background-color: green;
+    color: white;
+    border-color: green;
+}
+
+.save-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.seat-status {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+    flex-wrap: wrap;
+    /* Ensures wrapping on smaller screens if necessary */
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    /* Adjust as needed */
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #000;
+}
+
+/* Colors for seat statuses */
+.priority-seat {
+    background-color: yellow;
+}
+
+.booked-seat {
+    background-color: red;
+}
+
+.selected-seat {
+    background-color: green;
+}
+
+.available-seat {
+    background-color: white;
+}
+
+.saved-seat {
+    background-color: orange;
+}
+
+/* Orange for Pending seats */
+.pending-seat .seat-checkbox+.seat-number {
+    background-color: orange;
+    color: white;
+}
+
+/* Red for Confirmed seats */
+.confirmed-seat .seat-checkbox+.seat-number {
+    background-color: red;
+    color: white;
+}

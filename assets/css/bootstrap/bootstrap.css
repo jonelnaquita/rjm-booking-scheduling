@@ -1,9 +1,3 @@
-/*!
- * Bootstrap v4.0.0-beta (https://getbootstrap.com)
- * Copyright 2011-2017 The Bootstrap Authors
- * Copyright 2011-2017 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
 @media print {
   *,
   *::before,
@@ -76,7 +70,7 @@ body {
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.8;
-  color: #000000;
+  color: #161515;
   background-color: #fff; }
 
 [tabindex="-1"]:focus {
@@ -212,7 +206,7 @@ table {
 caption {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  color: #868e96;
+  color: #0f0f0f;
   text-align: left;
   caption-side: bottom; }
 
@@ -328,7 +322,7 @@ h1, h2, h3, h4, h5, h6,
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
-  color: #212529; }
+  color: #000000; }
 
 h1, .h1 {
   font-size: 2.5rem; }
@@ -1334,7 +1328,7 @@ pre {
   background-color: #212529; }
 
 .thead-default th {
-  color: #495057;
+  color: #000000;
   background-color: #e9ecef; }
 
 .table-inverse {
@@ -1366,7 +1360,7 @@ pre {
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   line-height: 1.25;
-  color: #495057;
+  color: #121213;
   background-color: #fff;
   background-image: none;
   background-clip: padding-box;

@@ -58,6 +58,18 @@
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button type="button"
+                                            id="reservation-tab"
+                                            role="tab"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#reservation-tabpane"
+                                            aria-controls="reservation-tabpane"
+                                            aria-selected="false"
+                                            class="nav-link">
+                                        Payment
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button type="button"
                                             id="site-tab"
                                             role="tab"
                                             data-bs-toggle="tab"
@@ -92,7 +104,7 @@
                                                     <label>Enter your password</label>
                                                     <input type="password" id="current_password" class="form-control" name="current_password" required>
                                                 </div>
-                                                <button type="button" id="update_email_btn" class="btn btn-danger me-2">Update Email</button>
+                                                <button type="button" id="update_email_btn" class="btn btn-primary btn-rounded me-2">Update Email</button>
                                             </div>
                                         </form>
                                     </div>
@@ -121,11 +133,51 @@
                                                     <!-- Validation message -->
                                                     <small id="message" class="form-text text-muted"></small>
                                                 </div>
-                                                <button type="button" id="update_password_btn" class="btn btn-danger me-2" disabled>Update Password</button>
+                                                <button type="button" id="update_password_btn" class="btn btn-primary btn-rounded me-2" disabled>Update Password</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
+
+                                <div role="tabpanel" id="reservation-tabpane" aria-labelledby="reservation-tab" class="tab-pane fade">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Payment</h4>
+                                        <p class="card-description">Update reservation fee</p>
+                                        <form class="update-reservation-fee" method="POST" id="update-reservation-fee" enctype="multipart/form-data">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <input type="text" id="reservation-fee" class="form-control" name="reservation-fee" placeholder="Enter reservation fee" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="gcash-qr">GCash QR Code</label>
+
+                                                    <!-- Fetch and display existing settings -->
+                                                    <?php include '../api/settings/fetch-site-details.php'; ?>
+
+                                                    <!-- Display the current QR Code if available -->
+                                                    <div id="current-logo" style="margin-bottom: 10px;">
+                                                        <?php if ($gcash_path): ?>
+                                                            <img id="current-gcash-qr" src="../../assets/images/payment/<?= htmlspecialchars($gcash_path) ?>" alt="Current QR Code" style="width: 100px; height: auto;">
+                                                        <?php else: ?>
+                                                            <p>No QR Code uploaded.</p>
+                                                        <?php endif; ?>
+                                                    </div>
+
+                                                    <div id="preview-container" style="margin-bottom: 10px; display: none;">
+                                                        <p>Preview:</p>
+                                                        <img id="screenshot-preview" src="" alt="Image Preview" style="width: 100px; height: auto;">
+                                                    </div>
+
+                                                    <input type="file" id="gcash-qr" name="gcash-qr" class="form-control" accept=".jpg, .jpeg, .png, .svg">
+                                                    <small id="file-error" class="form-text text-danger"></small>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-rounded me-2">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+
 
 
                                 <div role="tabpanel" id="site-tabpane" aria-labelledby="site-tab" class="tab-pane fade">
@@ -174,7 +226,7 @@
                                                     <input type="hidden" name="current_logo_path" value="<?php echo htmlspecialchars($logo_path); ?>">
                                                 </div>
 
-                                                <button type="button" id="update_site_btn" class="btn btn-danger me-2">Update Website</button>
+                                                <button type="button" id="update_site_btn" class="btn btn-primary btn-rounded me-2">Update Website</button>
                                             </div>
                                         </form>
                                     </div>
@@ -343,12 +395,6 @@ $(document).ready(function () {
         success: function (response) {
             // Handle the success response from the server
             toastr.success(response);
-
-            // Add the 'show active' class to the site-tab and reload the page after 1 second
-            setTimeout(function () {
-                $('#site-tabpane').addClass('show active');
-                location.reload();
-            }, 1000); // 1000 milliseconds = 1 second
         },
         error: function (jqXHR, textStatus, errorThrown) {
             // Handle any errors that occur during the AJAX request
@@ -360,6 +406,90 @@ $(document).ready(function () {
 });
 
 </script>
+
+
+<!--Reservation Fee-->
+<script>
+$(document).ready(function() {
+    // Fetch reservation fee
+    function fetchReservationFee() {
+        $.ajax({
+            url: '../api/settings/fetch-reservation-fee.php', // Adjust the path as necessary
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    $('#reservation-fee').val(response.reservation_fee);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('Error fetching reservation fee.');
+            }
+        });
+    }
+
+    // Initially fetch the reservation fee
+    fetchReservationFee();
+});
+</script>
+
+<!-- QR Code and Reservation Fee -->
+<script>
+$(document).ready(function () {
+    // Handle form submission
+    $('#update-reservation-fee').on('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(this); // Create a FormData object to send form data including files
+
+        $.ajax({
+            url: '../api/settings/update-payment.php',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    // Update the current QR code if a new one was uploaded
+                    if (data.gcash_path) {
+                        $('#current-gcash-qr').attr('src', '../../assets/images/payment/' + data.gcash_path);
+                        $('#current-gcash-qr').show();
+                    }
+                    toastr.success('Reservation fee and GCash QR Code updated successfully!');
+                    
+                    // Clear the file input and hide the preview
+                    $('#gcash-qr').val('');
+                    $('#preview-container').hide();
+                } else {
+                    toastr.error('Error: ' + data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error: ', status, error);
+                toastr.error('An error occurred. Please try again.');
+            }
+        });
+    });
+
+    // Preview the image before upload
+    $('#gcash-qr').on('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#screenshot-preview').attr('src', e.target.result);
+                $('#preview-container').show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+
+
 
 
 </html>

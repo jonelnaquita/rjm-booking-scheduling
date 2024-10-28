@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    include '../api/session.php';
-    include '../../models/conn.php';
-    include '../components/header.php';
+include '../api/session.php';
+include '../../models/conn.php';
+include '../components/header.php';
 ?>
 
 <head>
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../assets/css/theme.css">
 
 </head>
+
 <body>
 
     <div class="container-scroller">
@@ -22,7 +23,7 @@
         <div class="container-fluid page-body-wrapper">
             <!-- Include Sidebar-->
             <?php
-                include '../components/sidebar.php';
+            include '../components/sidebar.php';
             ?>
 
 
@@ -36,13 +37,17 @@
                         <div class="col-auto">
                             <!-- Dropdown for Add Items -->
                             <div class="dropdown">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
                                     Add Items
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
                                     <h6 class="dropdown-header">Add Items</h6>
-                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new-bus">New Bus</a>
-                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#bus-type">Bus Type</a>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new-bus">New
+                                        Bus</a>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#bus-type">Bus
+                                        Type</a>
                                     <div class="dropdown-divider"></div>
                                 </div>
                             </div>
@@ -50,14 +55,13 @@
                     </div>
 
 
-                    <?php
-                        include '../api/bus/fetch-buses.php';
-                    ?>
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive table-responsive-data2">
-                                <table id="bus-table" class="table table-hover" style="margin-top: 20px; margin-bottom: 20px;">
-                                    <thead> 
+                                <table id="bus-table" class="table table-hover"
+                                    style="margin-top: 20px; margin-bottom: 20px;">
+                                    <thead>
                                         <tr>
                                             <th></th>
                                             <th>Bus Number</th>
@@ -69,36 +73,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<tr class='tr-shadow'>
-                                                        <td>
-                                                            <label class='au-checkbox'>
-                                                                <input type='checkbox'>
-                                                                <span class='au-checkmark'></span>
-                                                            </label>
-                                                        </td>
-                                                        <td>{$row['bus_number']}</td>
-                                                        <td class='desc'>{$row['bus_type']}</td>
-                                                        <td class='desc'>{$row['seats']}</td>
-                                                        <td>
-                                                            <span class='block-email'>{$row['status']}</span>
-                                                        </td>
-                                                        <td>
-                                                            <div class='table-data-feature'>
-                                                                <button class='item' data-toggle='tooltip' data-placement='top' title='Edit' data-id='{$row['bus_id']}'>
-                                                                    <i class='mdi mdi-file'></i>
-                                                                </button>
-                                                                <button class='item' data-toggle='tooltip' data-placement='top' title='Delete' data-id='{$row['bus_id']}'>
-                                                                    <i class='mdi mdi-delete'></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='5'>No buses found.</td></tr>";
-                                        }
+                                        include '../api/bus/fetch-buses.php';
                                         ?>
                                     </tbody>
                                 </table>
@@ -109,20 +84,20 @@
                 </div>
 
 
-            <!--Include Footer -->
-            <?php
+                <!--Include Footer -->
+                <?php
                 include '../modal/bus-modal.php';
                 include '../components/footer.php';
-            ?>
+                ?>
 
             </div>
         </div>
-      <!-- page-body-wrapper ends -->
+        <!-- page-body-wrapper ends -->
     </div>
 </body>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         new DataTable('#bus-table', {
             paging: true,         // Enable pagination
             searching: true,      // Enable search box
@@ -138,10 +113,10 @@
         $.ajax({
             url: '../api/bus/fetch-bus-type.php',
             method: 'GET',
-            success: function(response) {
+            success: function (response) {
                 const busTypes = JSON.parse(response);
                 let tableContent = '';
-                busTypes.forEach(function(busType) {
+                busTypes.forEach(function (busType) {
                     tableContent += `
                         <tr>
                             <td>${busType.bus_type}</td>
@@ -158,25 +133,25 @@
 
     //Delete Bus Type
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadBusTypes(); // Load bus types on page load
     });
 
-    $(document).on('click', '.delete-bus-type', function() {
+    $(document).on('click', '.delete-bus-type', function () {
         const id = $(this).data('id');
         $.ajax({
             url: '../api/bus/delete-bus-type.php',
             method: 'POST',
             data: { id: id },
-            success: function() {
+            success: function () {
                 loadBusTypes(); // Refresh table after deletion
             }
         });
     });
 
     //Enable Add Button
-    $(document).ready(function() {
-        $('input[name="bus-type"], textarea[name="description"]').on('input', function() {
+    $(document).ready(function () {
+        $('input[name="bus-type"], textarea[name="description"]').on('input', function () {
             let busType = $('input[name="bus-type"]').val().trim();
             let description = $('textarea[name="description"]').val().trim();
 
@@ -191,8 +166,8 @@
 
 
     // Add New Bus Type
-    $(document).ready(function() {
-        $('.add-bus-type').on('click', function() {
+    $(document).ready(function () {
+        $('.add-bus-type').on('click', function () {
             let busType = $('input[name="bus-type"]').val().trim();
             let description = $('textarea[name="description"]').val().trim();
 
@@ -203,7 +178,7 @@
                     bus_type: busType,
                     description: description
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response === "success") {
                         toastr.success('Bus type added successfully.');
                         loadBusTypes(); // Refresh the table to show the new entry
@@ -220,141 +195,262 @@
 
 <!--Edit Bus Type-->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-    // Handle Edit button click
-    $(document).on('click', '.edit-btn', function() {
-        // Get bus type ID from the data-id attribute
-        let busTypeId = $(this).data('id');
-        
-        // Fetch the bus type data from the database using AJAX
-        $.ajax({
-            url: '../api/bus/get-bus-type.php', // PHP script to fetch a specific bus type by ID
-            method: 'GET',
-            data: { id: busTypeId },
-            success: function(response) {
-                const busType = JSON.parse(response);
-                
-                // Populate the modal input fields with the bus type data
-                $('.bus-type-id').val(busType.bustype_id);
-                $('input[name="bus-type"]').val(busType.bus_type);
-                $('textarea[name="description"]').val(busType.description);
+        // Handle Edit button click
+        $(document).on('click', '.edit-btn', function () {
+            // Get bus type ID from the data-id attribute
+            let busTypeId = $(this).data('id');
 
-                // Enable the "Save" button
-                $('.save-bus-type').prop('disabled', false);
+            // Fetch the bus type data from the database using AJAX
+            $.ajax({
+                url: '../api/bus/get-bus-type.php', // PHP script to fetch a specific bus type by ID
+                method: 'GET',
+                data: { id: busTypeId },
+                success: function (response) {
+                    const busType = JSON.parse(response);
 
-                // Show the modal
-                $('#bus-type').modal('show');
-            }
-        });
-    });
+                    // Populate the modal input fields with the bus type data
+                    $('.bus-type-id').val(busType.bustype_id);
+                    $('input[name="bus-type"]').val(busType.bus_type);
+                    $('textarea[name="description"]').val(busType.description);
 
-    // Enable "Save" button when both fields have values
-    $('input[name="bus-type"], textarea[name="description"]').on('input', function() {
-        let busType = $('input[name="bus-type"]').val().trim();
-        let description = $('textarea[name="description"]').val().trim();
+                    // Enable the "Save" button
+                    $('.save-bus-type').prop('disabled', false);
 
-        if (busType !== "" && description !== "") {
-            $('.save-bus-type').prop('disabled', false);
-        } else {
-            $('.save-bus-type').prop('disabled', true);
-        }
-    });
-
-    // Handle the Save button click
-    $('.save-bus-type').on('click', function() {
-        let busTypeId = $('.bus-type-id').val().trim();
-        let busType = $('input[name="bus-type"]').val().trim();
-        let description = $('textarea[name="description"]').val().trim();
-
-        // Send the updated data to the server via AJAX
-        $.ajax({
-            url: '../api/bus/update-bus-type.php', // PHP script to update the bus type
-            method: 'POST',
-            data: {
-                bustype_id: busTypeId,
-                bus_type: busType,
-                description: description
-            },
-            success: function(response) {
-                if (response === "success") {
-                    $('#bus-type').modal('hide');
-                    loadBusTypes(); // Refresh the table to show the updated entry
-                } else {
-                    alert("There was an error updating the bus type. Please try again.");
+                    // Show the modal
+                    $('#bus-type').modal('show');
                 }
+            });
+        });
+
+        // Enable "Save" button when both fields have values
+        $('input[name="bus-type"], textarea[name="description"]').on('input', function () {
+            let busType = $('input[name="bus-type"]').val().trim();
+            let description = $('textarea[name="description"]').val().trim();
+
+            if (busType !== "" && description !== "") {
+                $('.save-bus-type').prop('disabled', false);
+            } else {
+                $('.save-bus-type').prop('disabled', true);
             }
         });
+
+        // Handle the Save button click
+        $('.save-bus-type').on('click', function () {
+            let busTypeId = $('.bus-type-id').val().trim();
+            let busType = $('input[name="bus-type"]').val().trim();
+            let description = $('textarea[name="description"]').val().trim();
+
+            // Send the updated data to the server via AJAX
+            $.ajax({
+                url: '../api/bus/update-bus-type.php', // PHP script to update the bus type
+                method: 'POST',
+                data: {
+                    bustype_id: busTypeId,
+                    bus_type: busType,
+                    description: description
+                },
+                success: function (response) {
+                    if (response === "success") {
+                        $('#bus-type').modal('hide');
+                        loadBusTypes(); // Refresh the table to show the updated entry
+                    } else {
+                        alert("There was an error updating the bus type. Please try again.");
+                    }
+                }
+            });
+        });
     });
-});
 
 </script>
 
 
 <!--Adding New Bus -->
 <script>
-    $(document).ready(function() {
-    // Load bus types when the modal is opened
-    $('#new-bus').on('show.bs.modal', function() {
-        $.ajax({
-            url: '../api/bus/fetch-bus-type.php', // PHP script to fetch bus types
-            method: 'GET',
-            success: function(response) {
-                const busTypes = JSON.parse(response);
-                let options = '<option value="" disabled selected>Select Bus Type</option>';
-                
-                busTypes.forEach(function(busType) {
-                    options += `<option value="${busType.bustype_id}">${busType.bus_type}</option>`;
-                });
+    $(document).ready(function () {
+        // Load bus types when the modal is opened
+        $('#new-bus').on('show.bs.modal', function () {
+            $.ajax({
+                url: '../api/bus/fetch-bus-type.php', // PHP script to fetch bus types
+                method: 'GET',
+                success: function (response) {
+                    const busTypes = JSON.parse(response);
+                    let options = '<option value="" disabled selected>Select Bus Type</option>';
 
-                $('#bus-type-id').html(options);
-            }
-        });
-    });
+                    busTypes.forEach(function (busType) {
+                        options += `<option value="${busType.bustype_id}">${busType.bus_type}</option>`;
+                    });
 
-    // Enable "Add" button when both fields have values
-    $('input[name="bus-number"], #bus-type-id').on('change input', function() {
-        let busNumber = $('input[name="bus-number"]').val().trim();
-        let busTypeId = $('#bus-type-id').val();
-
-        if (busNumber !== "" && busTypeId !== null) {
-            $('.add-new-bus').prop('disabled', false);
-        } else {
-            $('.add-new-bus').prop('disabled', true);
-        }
-    });
-
-    // Handle the Add New Bus button click
-    $('.add-new-bus').on('click', function() {
-        let busNumber = $('input[name="bus-number"]').val().trim();
-        let busTypeId = $('#bus-type-id').val();
-        let busSeats = $('input[name="bus-seats"]').val().trim();
-
-        // Send the new bus data to the server via AJAX
-        $.ajax({
-            url: '../api/bus/add-new-bus.php', // PHP script to save the new bus
-            method: 'POST',
-            data: {
-                bus_number: busNumber,
-                bustype_id: busTypeId,
-                busSeats: busSeats
-            },
-            success: function(response) {
-                if (response === "success") {
-                    $('#new-bus').modal('hide');
-                    toastr.success('New bus added successfully.');
-                    setTimeout(function() {
-                        location.reload(); // Refresh the page
-                    }, 1000);
-                } else {
-                    alert("There was an error adding the new bus. Please try again.");
+                    $('#bus-type-id').html(options);
                 }
+            });
+        });
+
+        // Enable "Add" button when both fields have values
+        $('input[name="bus-number"], #bus-type-id').on('change input', function () {
+            let busNumber = $('input[name="bus-number"]').val().trim();
+            let busTypeId = $('#bus-type-id').val();
+
+            if (busNumber !== "" && busTypeId !== null) {
+                $('.add-new-bus').prop('disabled', false);
+            } else {
+                $('.add-new-bus').prop('disabled', true);
             }
         });
+
+        // Handle the Add New Bus button click
+        $('.add-new-bus').on('click', function () {
+            let busNumber = $('input[name="bus-number"]').val().trim();
+            let busTypeId = $('#bus-type-id').val();
+            let busSeats = $('input[name="bus-seats"]').val().trim();
+
+            // Send the new bus data to the server via AJAX
+            $.ajax({
+                url: '../api/bus/add-new-bus.php', // PHP script to save the new bus
+                method: 'POST',
+                data: {
+                    bus_number: busNumber,
+                    bustype_id: busTypeId,
+                    seats: busSeats
+                },
+                success: function (response) {
+                    if (response === "success") {
+                        $('#new-bus').modal('hide');
+                        toastr.success('New bus added successfully.');
+                        setTimeout(function () {
+                            location.reload(); // Refresh the page
+                        }, 1000);
+                    } else {
+                        alert("There was an error adding the new bus. Please try again.");
+                    }
+                }
+            });
+        });
     });
-});
 
 </script>
+
+
+<!-- Update Bus Script -->
+<script>
+    $(document).ready(function () {
+        // Handle the edit button click to fetch bus details
+        $(document).on('click', '.edit-button', function () {
+            var busId = $(this).data('id'); // Get the bus ID from the button's data-id attribute
+
+            // Set the bus ID as a data attribute on the modal for later use
+            $('#update-bus').data('bus-id', busId);
+
+            // Fetch bus details and bus types via AJAX
+            $.ajax({
+                url: '../api/bus/fetch-bus-details.php',
+                method: 'GET',
+                data: { bus_id: busId }, // Send bus ID to the server
+                success: function (response) {
+                    const busData = JSON.parse(response);
+
+                    // Populate the form fields with the fetched bus details
+                    $('input[name="update-bus-number"]').val(busData.bus_number);
+                    $('input[name="update-bus-seats"]').val(busData.seats);
+
+                    // Fetch bus types and populate the select dropdown
+                    $.ajax({
+                        url: '../api/bus/fetch-bus-type.php',
+                        method: 'GET',
+                        success: function (busTypeResponse) {
+                            const busTypes = JSON.parse(busTypeResponse);
+                            let options = '<option value="" disabled>Select Bus Type</option>';
+
+                            // Loop through bus types and set the correct one as selected
+                            busTypes.forEach(function (busType) {
+                                options += `<option value="${busType.bustype_id}" ${busData.bus_type == busType.bustype_id ? 'selected' : ''}>${busType.bus_type}</option>`;
+                            });
+
+                            $('#bus-type-update').html(options);
+                        }
+                    });
+                }
+            });
+        });
+
+
+        // Handle bus update submission
+        $('.update-bus-btn').on('click', function () {
+            let busId = $('#update-bus').data('bus-id'); // Get bus ID stored in modal
+            let busNumber = $('input[name="update-bus-number"]').val().trim();
+            let busTypeId = $('#bus-type-update').val();
+            let busSeats = $('input[name="update-bus-seats"]').val().trim();
+
+            $.ajax({
+                url: '../api/bus/update-bus.php',
+                method: 'POST',
+                data: {
+                    bus_id: busId,
+                    bus_number: busNumber,
+                    bus_type_id: busTypeId,
+                    seats: busSeats
+                },
+                success: function (response) {
+                    const res = JSON.parse(response);
+                    if (res.success) {
+                        toastr.success('Bus updated successfully!');
+                        $('#update-bus').modal('hide');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error('Failed to update bus. Please try again.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Delete Bus-->
+<script>
+    $(document).ready(function () {
+        let busIdToDelete; // Variable to hold the bus ID to delete
+
+        // Capture the bus ID when the delete button is clicked
+        $(document).on('click', '.delete-button', function () {
+            busIdToDelete = $(this).data('id'); // Get bus ID from the button's data-id attribute
+        });
+
+        // Handle confirm delete button click in the modal
+        $('#confirm-delete-btn').on('click', function () {
+            // Send AJAX request to delete the bus
+            $.ajax({
+                url: '../api/bus/delete-bus.php', // The PHP script that handles deletion
+                type: 'POST',
+                data: { bus_id: busIdToDelete }, // Send the bus ID to the server
+                success: function (response) {
+                    const res = JSON.parse(response);
+                    if (res.success) {
+                        toastr.success('Bus deleted successfully!', 'Success');
+                        $('#confirm-delete').modal('hide');
+                        // Add a 1-second delay before reloading the page
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error('Failed to delete the bus. Please try again.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
+
+
 
 
 

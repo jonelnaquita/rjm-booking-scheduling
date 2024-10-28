@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="../../assets/css/seats.css">
     </head>
 
-<div class="container mt-5">
+<div class="container mt-5" style="height: 100vh;">
     <!-- Step 2 Row -->
     <div class="row step-row">
         <div class="col-12">
@@ -27,23 +27,53 @@
             <!--Show Departure Schedule Card-->
             <?php 
 
-                if ($direction === 'Round-Trip') {
-                    // Include both components if the direction is 'Round-Trip'
-                    include '../components/seats/departure-schedule.php';
-                    include '../components/seats/arrival-schedule.php';
+                // Define a mapping of directions to components
+                $componentMap = [
+                    'One-Way' => ['../components/seats/departure-schedule.php'],
+                    'Round-Trip' => [
+                        '../components/seats/departure-schedule.php',
+                        '../components/seats/arrival-schedule.php'
+                    ]
+                ];
+
+                // Load components based on the direction
+                if (array_key_exists($direction, $componentMap)) {
+                    foreach ($componentMap[$direction] as $component) {
+                        require $component; // Load each component dynamically
+                    }
                 } else {
-                    // Include only the departure-schedule component if the direction is not 'Round-Trip'
-                    include '../components/seats/departure-schedule.php';
+                    // Optionally handle cases where the direction is unknown
+                    echo 'Invalid direction provided.';
                 }
                 ?>
+
 
         </div>
     </div>
 
-<?php
-    include '../modal/pick-seat-arrival.php';
-    include '../modal/pick-seat-departure.php';
-?>
+
+    <?php 
+
+        // Define a mapping of directions to components
+        $componentMap = [
+            'One-Way' => ['../modal/pick-seat-departure.php'],
+            'Round-Trip' => [
+                '../modal/pick-seat-departure.php',
+                '../modal/pick-seat-arrival.php'
+            ]
+        ];
+
+        // Load components based on the direction
+        if (array_key_exists($direction, $componentMap)) {
+            foreach ($componentMap[$direction] as $component) {
+                require $component; // Load each component dynamically
+            }
+        } else {
+            // Optionally handle cases where the direction is unknown
+            echo 'Invalid direction provided.';
+        }
+    ?>
+
 
     <!-- Navigation Buttons -->
     <div class="row mt-4">

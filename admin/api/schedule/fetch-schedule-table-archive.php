@@ -44,8 +44,6 @@
             echo "</tr>";
             $counter++;
         }
-    } else {
-        echo "<tr><td colspan='9'>No schedules found.</td></tr>";
     }
 
     mysqli_close($conn);

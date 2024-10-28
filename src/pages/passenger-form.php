@@ -9,7 +9,7 @@
         include '../components/nav.php';
     ?>
 
-<div class="container mt-5">
+<div class="container mt-5" style="height: 100vh;">
     <!-- Step 2 Row -->
     <div class="row step-row">
         <div class="col-12">

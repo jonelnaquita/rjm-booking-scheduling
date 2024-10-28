@@ -21541,14 +21541,14 @@ code {
 }
 
 #north-america-chart-legend ul,
-#south-america-chart-legend ul {
+#booking-status-chart-legend ul {
   margin-bottom: 0;
   list-style: none;
   padding-left: 0;
   display: none;
 }
 #north-america-chart-legend ul li,
-#south-america-chart-legend ul li {
+#booking-status-chart-legend ul li {
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
@@ -21556,7 +21556,7 @@ code {
   margin-top: 1rem;
 }
 #north-america-chart-legend ul li span,
-#south-america-chart-legend ul li span {
+#booking-status-chart-legend ul li span {
   width: 20px;
   height: 20px;
   margin-right: 0.4rem;
@@ -21565,20 +21565,20 @@ code {
   border-radius: 50%;
 }
 #north-america-chart-legend > :first-child,
-#south-america-chart-legend > :first-child {
+#booking-status-chart-legend > :first-child {
   display: block;
 }
 .rtl #north-america-chart-legend ul,
-.rtl #south-america-chart-legend ul {
+.rtl #booking-status-chart-legend ul {
   padding-right: 0;
 }
 .rtl #north-america-chart-legend ul li,
-.rtl #south-america-chart-legend ul li {
+.rtl #booking-status-chart-legend ul li {
   margin-right: 0;
   margin-left: 8%;
 }
 .rtl #north-america-chart-legend ul li span,
-.rtl #south-america-chart-legend ul li span {
+.rtl #booking-status-chart-legend ul li span {
   margin-right: 0;
   margin-left: 1rem;
 }

@@ -45,14 +45,27 @@
                 <div class="payment-box p-4">
                     <!-- Image Display -->
                     <div class="image-container mb-3">
-                        <img src="../../assets/images/payment.jpg" alt="Payment Image" class="img-fluid">
+                        <?php
+                        // Fetch the GCash image filename from the admin table
+                        include_once '../../models/conn.php';
+                        $sql = "SELECT gcash FROM tbladmin LIMIT 1";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            $gcashImage = $row['gcash'];
+                            echo "<img src='../../assets/images/payment/{$gcashImage}' alt='GCash QR Code' class='img-fluid'>";
+                        } else {
+                            echo "<p>No GCash QR code available.</p>";
+                        }
+                        $conn->close();
+                        ?>
                     </div>
 
                     <!-- File Upload Input -->
                     <div class="file-upload mb-3">
                         <label for="file-upload" class="form-label">Upload Payment Proof:</label>
-                        <input type="file" id="file-upload" name="payment-proof" class="form-control">
-                        <div class="invalid-feedback" id="file-error" style="display:none;">Please upload your payment proof.</div>
+                        <input type="file" id="file-upload" name="payment-proof" class="form-control" accept="image/*">
+                        <div class="invalid-feedback" id="file-error" style="display:none;">Please upload your payment proof (image files only).</div>
                     </div>
 
                     <!-- Reference Number Input -->
@@ -83,8 +96,9 @@
 
         <!-- Seats -->
         <input type="hidden" name="departureSeats" value="<?php echo htmlspecialchars(implode(', ', $departureSeats)); ?>" placeholder="Departure Seats">
-        <input type="hidden" name="arrivalSeats" value="<?php echo htmlspecialchars(implode(', ', $arrivalSeats)); ?>" placeholder="Arrival Seats">
-        
+        <?php if ($direction === "Round-Trip"): ?>
+            <input type="hidden" name="arrivalSeats" value="<?php echo htmlspecialchars(implode(', ', $arrivalSeats)); ?>" placeholder="Arrival Seats">
+        <?php endif; ?>
 
     <!-- Navigation Buttons -->
     <div class="row mt-4">
@@ -98,10 +112,11 @@
     </form>
 </div>
 
+</body>
+
 <?php
     include '../components/footer.php'
 ?>
-</body>
 
 <script>
 function validatePaymentForm() {
@@ -112,14 +127,23 @@ function validatePaymentForm() {
     // Initialize validation status
     let isValid = true;
 
-    // Validate file input
+        // Validate file input
     if (fileInput.files.length === 0) {
         document.getElementById('file-error').style.display = 'block';
         fileInput.classList.add('is-invalid');
         isValid = false;
     } else {
-        document.getElementById('file-error').style.display = 'none';
-        fileInput.classList.remove('is-invalid');
+        const file = fileInput.files[0];
+        const fileType = file.type;
+        if (!fileType.startsWith('image/')) {
+            document.getElementById('file-error').textContent = 'Please upload an image file.';
+            document.getElementById('file-error').style.display = 'block';
+            fileInput.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            document.getElementById('file-error').style.display = 'none';
+            fileInput.classList.remove('is-invalid');
+        }
     }
 
     // Validate reference number

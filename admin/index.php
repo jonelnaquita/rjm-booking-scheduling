@@ -28,16 +28,19 @@
                   <div class="form-group">
                     <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" name="email" required>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group position-relative"> <!-- Added position-relative class -->
                     <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="password" required>
+                    <span class="mdi mdi-eye" id="togglePassword"
+                          style="cursor: pointer; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+                    </span>
                   </div>
                   <div class="mt-3 d-grid gap-2">
-                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SIGN IN</button>
+                    <button type="submit" class="btn btn-block btn-primary btn-rounded btn-lg font-weight-medium auth-form-btn">SIGN IN</button>
                   </div>
                   <div class="my-2 d-flex justify-content-between align-items-center">
                     <div class="form-check">
                     </div>
-                    <a href="#" class="auth-link text-black">Forgot password?</a>
+                    <a href="pages/forgot-password.php" class="auth-link text-black">Forgot password?</a>
                   </div>
                 </form>
               </div>
@@ -70,6 +73,15 @@
                     }
                 });
             });
+        });
+
+        // Show/Hide password functionality
+        $('#togglePassword').on('click', function() {
+            const passwordInput = $('#exampleInputPassword1');
+            const eyeIcon = $('#eyeIcon');
+            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+            passwordInput.attr('type', type);
+            eyeIcon.toggleClass('mdi-eye mdi-eye-off'); // Toggle eye icon
         });
     </script>
 </body>

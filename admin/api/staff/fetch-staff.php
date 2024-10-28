@@ -7,10 +7,12 @@ header('Content-Type: application/json');
 $query = "
     SELECT s.*, 
            r.destination_from, 
-           b.bus_number 
+           b.bus_number,
+           bt.bus_type
     FROM tblstaff s
     LEFT JOIN tblroutefrom r ON s.terminal = r.from_id
     LEFT JOIN tblbus b ON s.bus_number = b.bus_id
+    LEFT JOIN tblbustype bt ON b.bus_type = bt.bustype_id
 ";
 
 // Execute the query

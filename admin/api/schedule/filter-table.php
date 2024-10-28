@@ -3,7 +3,6 @@ include '../../../models/conn.php'; // Adjust the path to your database connecti
 
 $departure_date = isset($_POST['departure_date']) ? $_POST['departure_date'] : '';
 $departure_time = isset($_POST['departure_time']) ? $_POST['departure_time'] : '';
-$status = isset($_POST['status']) ? $_POST['status'] : '';
 
 // Construct SQL query with filters
 $query = "
@@ -15,7 +14,9 @@ $query = "
             b.bus_number,
             bt.bus_type,
             b.status,
-            trf.destination_from AS trip_to
+            s.sched_status,
+            trf.destination_from AS trip_to,
+            s.fare
         FROM 
             tblschedule s
         JOIN 
@@ -37,9 +38,6 @@ if (!empty($departure_date)) {
 if (!empty($departure_time)) {
     $query .= " AND s.departure_time = '" . mysqli_real_escape_string($conn, $departure_time) . "'";
 }
-if (!empty($status)) {
-    $query .= " AND b.status = '" . mysqli_real_escape_string($conn, $status) . "'";
-}
 
 $query .= " ORDER BY s.schedule_id ASC";
 
@@ -50,23 +48,23 @@ if(mysqli_num_rows($result) > 0) {
     while($row = mysqli_fetch_assoc($result)) {
         echo "<tr>";
         echo "<td>" . $counter . "</td>";
-        echo "<td> <label class='badge badge-info'>". htmlspecialchars($row['destination_from']) ."</label></td>";
-        echo "<td> <label class='badge badge-info'>". htmlspecialchars($row['trip_to']) ."</label></td>";
+        echo "<td> <label class='badge badge-info'>". htmlspecialchars($row['destination_from']) ."</label> to <label class='badge badge-danger'>". htmlspecialchars($row['trip_to']) ."</label></td>";
         echo "<td>" . date('F j, Y', strtotime($row['departure_date'])) . "</td>";
         echo "<td>" . date('h:i A', strtotime($row['departure_time'])) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_number']) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_type']) . "</td>";
-        echo "<td> <label class='badge badge-success'>". htmlspecialchars($row['status']) ."</label></td>";
+        echo "<td> ₱" . htmlspecialchars($row['fare']) . "</td>"; 
+        // echo "<td> <label class='badge badge-success'>". htmlspecialchars($row['status']) ."</label></td>";
         echo "<td>
                 <div class='table-data-feature'>
-                    <button class='item' data-toggle='tooltip' data-placement='top' title='Edit' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
-                        <i class='mdi mdi-file'></i>
+                    <button class='btn btn-sm btn-outline-primary edit-button mr-2' data-toggle='tooltip' data-placement='top' title='Edit' data-bs-toggle='modal' data-bs-target='#schedule-modal' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
+                            <i class='mdi mdi-account-edit'></i>
                     </button>
-                    <button class='item' data-toggle='tooltip' data-placement='top' title='Delete' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
+                    <button class='btn btn-sm btn-outline-danger' data-toggle='tooltip' data-placement='top' title='Delete' data-bs-toggle='modal' data-bs-target='#confirm-delete' data-id='" . htmlspecialchars($row['schedule_id']) . "'>
                         <i class='mdi mdi-delete'></i>
                     </button>
                 </div>
-              </td>";
+                </td>";
         echo "</tr>";
         $counter++;
     }

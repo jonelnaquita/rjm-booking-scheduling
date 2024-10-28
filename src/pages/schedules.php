@@ -16,6 +16,11 @@
             border-radius: 5px;
             padding: 5px 10px;
         }
+
+        body{
+            color: black;
+        }
+
     </style>
 </head>
 <body>
@@ -24,7 +29,7 @@
     ?>
 
     <div>
-    <div class="container mt-5">
+    <div class="container mt-5" style="height: 100vh;">
     <!-- Step 1 Row -->
     <div class="row step-row">
         <div class="col-12 ">
@@ -166,12 +171,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         href = `passenger-form.php?scheduleDeparture_id=${schedule.schedule_id}`;
                     }
 
+                    // Disable the 'Book' button if available seats are 0
+                    let disabled = schedule.available_seats == 0 ? 'disabled' : '';
                     let row = `<tr>
                         <td>${schedule.departure_time}</td>
                         <td>${schedule.bus_type}</td>
                         <td>${schedule.available_seats}</td>
                         <td>₱${schedule.fare}</td>
-                        <td><a href='${href}' class='btn btn-primary'>Book</a></td>
+                        <td><a href='${href}' class='btn btn-primary book-btn ${disabled}' ${disabled}>Book</a></td>
                     </tr>`;
                     tableBody.insertAdjacentHTML('beforeend', row);
                 });
@@ -182,7 +189,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
 
 
 

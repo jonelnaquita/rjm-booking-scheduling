@@ -82,3 +82,14 @@
     font-weight: bold;
     margin-top: 10px;
 }
+
+
+/*Loading*/
+
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+}

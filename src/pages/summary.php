@@ -20,7 +20,7 @@
     </head>
 
     <div>
-    <div class="container mt-5">
+    <div class="container mt-5" style="height: 100vh;">
         <!-- Step 1 Row -->
         <div class="row step-row">
             <div class="col-12 ">
@@ -44,7 +44,19 @@
                 <div class="fare-summary p-4">
                     <div class="row">
                         <?php
-                            $reservationFeePerPassenger = 30.00;
+                            require '../../models/conn.php';  // Include your database connection script
+
+                            // Fetch the reservation fee from tbladmin
+                            $query = "SELECT reservation_fee FROM tbladmin WHERE admin_id = 1"; // Adjust admin_id condition as necessary
+                            $result = $conn->query($query);
+
+                            if ($result && $result->num_rows > 0) {
+                                $row = $result->fetch_assoc();
+                                $reservationFeePerPassenger = $row['reservation_fee'];
+                            } else {
+                                // Handle the case where the fee could not be fetched
+                                $reservationFeePerPassenger = 30.00; // Default value or error handling
+                            }
 
                             // Calculate amounts for departure
                             $totalDepartureFare = $departureFare * $passenger;
@@ -83,7 +95,8 @@
 
                             // Store $totalAmount in session
                             $_SESSION['totalAmount'] = $totalAmount;
-                        ?>
+                            ?>
+
 
                         <?php
                             include '../components/summary/departure-payment.php';

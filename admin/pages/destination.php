@@ -1,6 +1,3 @@
-<?php
-    include '../api/session.php';
-?>
 
 <!DOCTYPE html>
 <html lang="en">

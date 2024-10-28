@@ -9,6 +9,7 @@
 <head>
 
     <link rel="stylesheet" href="../assets/css/destination-tab.css">
+    <link rel="stylesheet" href="../assets/css/staff.css">
 
     <style>
         .is-invalid {
@@ -135,9 +136,19 @@ $(document).ready(function() {
         dropdownParent: $('#staff-modal'),
         width: '100%' // Ensure full width
     });
+
+    $('#role-2').select2({
+        dropdownParent: $('#edit-staff-modal'),
+        width: '100%' // Ensure full width
+    });
     
     $('#terminal').select2({
         dropdownParent: $('#staff-modal'),
+        width: '100%' // Ensure full width
+    });
+
+    $('#terminal-2').select2({
+        dropdownParent: $('#edit-staff-modal'),
         width: '100%' // Ensure full width
     });
 
@@ -146,13 +157,24 @@ $(document).ready(function() {
         width: '100%' // Ensure full width
     });
 
-    // Populate role
-    $('#role').append(new Option('Select Role', '', true, true)).prop('selected', true);
-    $('#role').append(new Option('Terminal Staff', 'Terminal Staff'));
-    $('#role').append(new Option('Driver', 'Driver'));
-    $('#role').append(new Option('Conductor', 'Conductor'));
+    $('#bus_number-2').select2({
+        dropdownParent: $('#edit-staff-modal'),
+        width: '100%' // Ensure full width
+    });
 
-    $('#role').val('').trigger('change');
+        // Populate role
+        $('#role').append(new Option('Select Role', '', true, true)).prop('selected', true);
+        $('#role').append(new Option('Terminal Staff', 'Terminal Staff'));
+        $('#role').append(new Option('Driver', 'Driver'));
+        $('#role').append(new Option('Conductor', 'Conductor'));
+        $('#role').val('').trigger('change');
+
+        $('#role-2').append(new Option('Select Role', '', true, true)).prop('selected', true);
+        $('#role-2').append(new Option('Terminal Staff', 'Terminal Staff'));
+        $('#role-2').append(new Option('Driver', 'Driver'));
+        $('#role-2').append(new Option('Conductor', 'Conductor'));
+        $('#role-2').val('').trigger('change');
+
 
     // Fetch terminals and bus numbers from server
     $.ajax({
@@ -166,10 +188,20 @@ $(document).ready(function() {
                 $('#terminal').append(`<option value="${terminal.from_id}">${terminal.destination_from}</option>`);
             });
 
+            $('#terminal-2').empty().append('<option value="" disabled selected>Select Terminal</option>');
+            $.each(data.terminals, function(index, terminal) {
+                $('#terminal-2').append(`<option value="${terminal.from_id}">${terminal.destination_from}</option>`);
+            });
+
             // Populate bus number select
             $('#bus_number').empty().append('<option value="" disabled selected>Select Bus Number</option>');
             $.each(data.buses, function(index, bus) {
                 $('#bus_number').append(`<option value="${bus.bus_id}">${bus.bus_number}</option>`);
+            });
+
+            $('#bus_number-2').empty().append('<option value="" disabled selected>Select Bus Number</option>');
+            $.each(data.buses, function(index, bus) {
+                $('#bus_number-2').append(`<option value="${bus.bus_id}">${bus.bus_number}</option>`);
             });
         },
         error: function() {
@@ -184,6 +216,7 @@ $(document).ready(function() {
     $(document).ready(function () {
     // Initialize the bus number field as hidden
     $('#bus_number').closest('.form-group').hide();
+    $('#bus_number-2').closest('.form-group').hide();
 
     // Role change event listener
     $('#role').change(function () {
@@ -195,6 +228,18 @@ $(document).ready(function() {
         } else {
             // Hide the bus number field if the role is Terminal Staff or other
             $('#bus_number').closest('.form-group').hide();
+        }
+    });
+
+    $('#role-2').change(function () {
+        let selectedRole = $(this).val();
+
+        if (selectedRole === 'Driver' || selectedRole === 'Conductor') {
+            // Show the bus number field if the role is Driver or Conductor
+            $('#bus_number-2').closest('.form-group').show();
+        } else {
+            // Hide the bus number field if the role is Terminal Staff or other
+            $('#bus_number-2').closest('.form-group').hide();
         }
     });
 });
@@ -273,10 +318,7 @@ $('#userForm input, #userForm select').on('input change', function() {
 <!-- Check Email -->
 <script>
 $(document).ready(function () {
-    // Hide the email error message initially
     $('#email-error').hide();
-
-    // Listen for changes in the email input field
     $('#email').on('input', function () {
         var email = $(this).val();
 
@@ -310,7 +352,7 @@ $(document).ready(function () {
 });
 </script>
 
-// Fetch Staff
+
 <script>
 $(document).ready(function() {
     function fetchStaffData() {
@@ -328,7 +370,7 @@ $(document).ready(function() {
                 data.forEach(function(staff) {
                     // Create a base card template
                     var card = `
-                        <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="col-md-6 col-sm-6 mb-4">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div>
@@ -336,10 +378,11 @@ $(document).ready(function() {
                                         <p class="staff-role">${staff.role}</p>
                                         <p class="email">${staff.email}</p>
                                         <h6 class="terminal mt-3">${staff.destination_from} Terminal</h6>
-                                        ${staff.role === 'Driver' || staff.role === 'Conductor' ? `<h6 class="bus-number">Bus #: ${staff.bus_number}</h6>` : ''}
+                                        ${staff.role === 'Driver' || staff.role === 'Conductor' ? `<h6 class="bus-number">Bus #: ${staff.bus_number}</h6>
+                                        <h6 class="bus-type">${staff.bus_type}</h6>` : ''}
                                     </div>
-                                    <button class="btn btn-info btn-sm mt-3 mb-4 text-light">Update</button>
-                                    <button class="btn btn-danger btn-sm mt-3 mb-4 text-light">Delete</button>
+                                    <button class="btn btn-info btn-sm mt-3 mb-4 text-light" update-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#edit-staff-modal">Update</button>
+                                    <button class="btn btn-danger btn-sm mt-3 mb-4 text-light" delete-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#delete-staff-modal">Delete</button>
                                 </div>
                             </div>
                         </div>`;
@@ -365,7 +408,106 @@ $(document).ready(function() {
     fetchStaffData();
 
     // Optionally, set up a mechanism to refresh data periodically (e.g., every 30 seconds)
-    setInterval(fetchStaffData, 30000); // Adjust the interval as needed
+    setInterval(fetchStaffData, 1000); // Adjust the interval as needed
+});
+</script>
+
+
+<!--Update Staff-->
+<script>
+    $(document).on('click', '.btn-info', function() {
+    // Get the staff ID from the button's attribute
+    var staff_id = $(this).attr('update-data-id');
+    
+    // Make an AJAX request to get the staff details based on staff_id
+    $.ajax({
+        url: '../api/staff/fetch-existing-staff.php', // PHP file to fetch staff details
+        type: 'POST',
+        data: { staff_id: staff_id },
+        dataType: 'json',
+        success: function(response) {
+            // Populate the input fields with the existing details
+            $('#firstname-2').val(response.firstname);
+            $('#lastname-2').val(response.lastname);
+            $('#role-2').val(response.role).trigger('change');
+            $('#terminal-2').val(response.terminal).trigger('change');
+            $('#bus_number-2').val(response.bus_number).trigger('change');
+            
+            // Set the staff_id to a hidden field or use it when submitting the form
+            $('#edit-staff-modal').data('staff-id', staff_id);
+        },
+        error: function(xhr, status, error) {
+            alert('Failed to fetch staff details: ' + error);
+        }
+    });
+});
+</script>
+
+<script>
+    $('.edit-staff-btn').click(function() {
+    // Get the staff_id stored in the modal
+    var staff_id = $('#edit-staff-modal').data('staff-id');
+
+    // Collect the form data
+    var formData = {
+        staff_id: staff_id,
+        firstname: $('#firstname-2').val(),
+        lastname: $('#lastname-2').val(),
+        role: $('#role-2').val(),
+        terminal: $('#terminal-2').val(),
+        bus_number: $('#bus_number-2').val()
+    };
+
+    // AJAX request to update the staff details
+    $.ajax({
+        url: '../api/staff/update-staff.php', // PHP file to handle the update
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            if (response === 'success') {
+                toastr.success('Staff details updated successfully.');
+                $('#edit-staff-modal').modal('hide');
+                fetchStaffData();
+            } else {
+                toastr.error('Failed to update staff details. Try again.');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred: ' + error);
+        }
+    });
+});
+</script>
+
+
+<!-- Delete Staff -->
+<script>
+$(document).on('click', '.btn-danger', function() {
+    var staff_id = $(this).attr('delete-data-id');
+    $('.staff_id').val(staff_id);
+});
+
+$('#confirm-delete').click(function() {
+    var staff_id = $('.staff_id').val(); // Get the staff ID
+
+    // AJAX request to delete the staff
+    $.ajax({
+        url: '../api/staff/delete-staff.php', // PHP file to handle the deletion
+        type: 'POST',
+        data: { staff_id: staff_id },
+        success: function(response) {
+            if (response === 'success') {
+                toastr.success('Staff has been deleted successfully.');
+                $('#delete-staff-modal').modal('hide');
+                fetchStaffData();
+            } else {
+                toastr.error('Failed to delete staff. Try again.');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred: ' + error);
+        }
+    });
 });
 </script>
 

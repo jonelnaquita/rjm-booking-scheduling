@@ -1,0 +1,26 @@
+/* Alert Styling */
+.alert-confirmation {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-top: 20px;
+    color: #155724;
+}
+
+.alert-confirmation i {
+    font-size: 5em;
+    color: #28a745;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.swal-title {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.passenger-id {
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 10px;
+}

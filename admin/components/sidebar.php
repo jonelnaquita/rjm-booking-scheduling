@@ -14,9 +14,10 @@
       </a>
       <div class="collapse" id="bookings">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="booking.php">View Bookings</a></li>
-          <li class="nav-item"> <a class="nav-link" href="booking-confirmed.php">Confirmed</a></li>
-          <li class="nav-item"> <a class="nav-link" href="booking-cancellation.php">Cancellations</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking.php" id="view-bookings">View Bookings</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking-confirmed.php" id="confirmed-bookings">Confirmed</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking-reschedule-list.php" id="reschedule-bookings">Re-schedule</a></li>
+          <li class="nav-item"> <a class="nav-link" href="booking-cancellation.php" id="cancellation-bookings">Cancelled</a></li>
         </ul>
       </div>
     </li>
@@ -34,8 +35,8 @@
       </a>
       <div class="collapse" id="schedules">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="schedule.php">View Schedules</a></li>
-          <li class="nav-item"> <a class="nav-link" href="schedule-archives.php">Archives</a></li>
+          <li class="nav-item"> <a class="nav-link" href="schedule.php" id="view-schedules">View Schedules</a></li>
+          <li class="nav-item"> <a class="nav-link" href="schedule-archives.php" id="schedule-archives">Archives</a></li>
         </ul>
       </div>
     </li>
@@ -52,7 +53,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#reports" aria-expanded="false" aria-controls="reports">
+      <a class="nav-link" href="reports.php" aria-expanded="false" aria-controls="reports">
         <i class="icon-folder menu-icon"></i>
         <span class="menu-title">Reports</span>
         <i class="menu-arrow"></i>
@@ -72,3 +73,50 @@
     </li>
   </ul>
 </nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get the current page URL
+  var currentPage = window.location.pathname.split('/').pop();
+
+  // Remove 'active' class from all nav links
+  document.querySelectorAll('.nav-link').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  // Add 'active' class to the correct nav link based on the current page
+  switch(currentPage) {
+    case 'schedule.php':
+      document.getElementById('view-schedules').classList.add('active');
+      break;
+    case 'schedule-archives.php':
+      document.getElementById('schedule-archives').classList.add('active');
+      break;
+    case 'booking.php':
+      document.getElementById('view-bookings').classList.add('active');
+      break;
+    case 'booking-confirmed.php':
+      document.getElementById('confirmed-bookings').classList.add('active');
+      break;
+    case 'booking-reschedule.php':
+      document.getElementById('reschedule-bookings').classList.add('active');
+      break;
+    case 'booking-cancellation.php':
+      document.getElementById('cancellation-bookings').classList.add('active');
+      break;
+    // Add more cases for other pages as needed
+  }
+
+  // Expand the parent collapse if a child is active
+  document.querySelectorAll('.nav-link.active').forEach(function(activeLink) {
+    var collapseParent = activeLink.closest('.collapse');
+    if (collapseParent) {
+      collapseParent.classList.add('show');
+      var parentToggle = document.querySelector('[data-bs-target="#' + collapseParent.id + '"]');
+      if (parentToggle) {
+        parentToggle.setAttribute('aria-expanded', 'true');
+      }
+    }
+  });
+});
+</script>

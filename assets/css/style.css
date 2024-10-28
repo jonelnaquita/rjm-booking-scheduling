@@ -152,7 +152,7 @@ a {
     .probootstrap_navbar .nav-item .nav-link.active {
       color: #fff; }
   .probootstrap_navbar.scrolled {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(255, 255, 255, 0.8);
     position: fixed;
     right: 0;
     left: 0;
@@ -320,7 +320,7 @@ a {
           padding-right: 15px; } }
 
 .probootstrap_section {
-  padding: 7em 0;
+  padding: 1em 0;
   float: left;
   width: 100%; }
   .probootstrap_section.bg-light {

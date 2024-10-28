@@ -22,10 +22,14 @@ if (isset($_SESSION['schedule_departure']) && !empty($_SESSION['schedule_departu
 // echo "Departure Schedule ID: " . (isset($scheduleDeparture_id) ? htmlspecialchars($scheduleDeparture_id) : 'Not available') . "<br>";
 
 
-// Retrieve 'schedule_id' from the URL, if it exists
+// Initialize scheduleArrival_id to zero by default
+$scheduleArrival_id = 0; // Default value
+
+// Retrieve 'scheduleArrival_id' from the URL, if it exists
 if (isset($_GET['scheduleArrival_id']) && !empty($_GET['scheduleArrival_id'])) {
     $scheduleArrival_id = $_GET['scheduleArrival_id'];
 
+    // Store the retrieved ID in session
     $_SESSION['schedule_arrival'] = [
         'scheduleArrival_id' => $scheduleArrival_id,
     ];
@@ -35,11 +39,15 @@ if (isset($_GET['scheduleArrival_id']) && !empty($_GET['scheduleArrival_id'])) {
 if (isset($_SESSION['schedule_arrival']) && !empty($_SESSION['schedule_arrival'])) {
     $scheduleArrival = $_SESSION['schedule_arrival'];
 
-    // Ensure 'schedule_id' is set in the session data
-    if (isset($scheduleArrival['scheduleArrival_id'])) {
+    // Ensure 'scheduleArrival_id' is set in the session data
+    if (isset($scheduleArrival['scheduleArrival_id']) && !empty($scheduleArrival['scheduleArrival_id'])) {
         $scheduleArrival_id = $scheduleArrival['scheduleArrival_id'];
+    } else {
+        // If 'scheduleArrival_id' is empty, set it to zero
+        $scheduleArrival_id = 0;
     }
 }
+
 
 // Display the arrival schedule ID if available
 // echo "Arrival Schedule ID: " . (isset($scheduleArrival_id) ? htmlspecialchars($scheduleArrival_id) : 'Not available') . "<br>";
@@ -64,6 +72,6 @@ if(isset($_SESSION['booking'])) {
     echo "Departure Date: " . htmlspecialchars($date_departure) . "<br>";
     echo "Arrival Date: " . htmlspecialchars($date_arrival) . "<br>";
     echo "Number of Passengers: " . htmlspecialchars($passenger) . "<br>";
-    */
+    **/
 }
 ?>

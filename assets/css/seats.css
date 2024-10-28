@@ -1,26 +1,35 @@
 .booking-box {
-    background-color: #ffffff; /* White background */
-    border: 1px solid #ddd; /* Light border */
-    border-radius: 8px; /* Rounded corners */
+    background-color: #ffffff;
+    /* White background */
+    border: 1px solid #ddd;
+    /* Light border */
+    border-radius: 8px;
+    /* Rounded corners */
     width: 100%;
     margin-bottom: 50px;
 }
 
 .destination-route {
-    font-size: 2.5rem; /* Larger text for destination */
+    font-size: 2.5rem;
+    /* Larger text for destination */
     font-weight: bold;
-    text-align: center; /* Centered text */
+    text-align: center;
+    /* Centered text */
     margin-bottom: 15px;
 }
 
 .details {
-    text-align: center; /* Centered details */
-    color: #555; /* Subtle text color */
+    text-align: center;
+    /* Centered details */
+    color: #555;
+    /* Subtle text color */
 }
 
 .pick-seat-btn {
-    background-color: #de5108; /* Button color */
-    color: #ffffff; /* Text color */
+    background-color: #de5108;
+    /* Button color */
+    color: #ffffff;
+    /* Text color */
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
@@ -30,11 +39,31 @@
 }
 
 .pick-seat-btn:hover {
-    background-color: #c24a06; /* Darker shade on hover */
+    background-color: #c24a06;
+    /* Darker shade on hover */
 }
 
 
 /*Pick Seat Modal*/
+
+.empty-seat {
+    width: 50px;
+    /* Adjust width to match seat width */
+    height: 40px;
+    /* Match height to seat height */
+}
+
+.front-seat{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.conductor-seat{
+    margin-left: 80px;
+}
 
 .seat-grid {
     display: flex;
@@ -60,7 +89,8 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 50px; /* Adjust width as needed */
+    width: 50px;
+    /* Adjust width as needed */
 }
 
 .seat input[type="checkbox"] {
@@ -79,10 +109,11 @@
     font-size: 16px;
     color: #333;
     cursor: pointer;
-    user-select: none; /* Prevents text selection */
+    user-select: none;
+    /* Prevents text selection */
 }
 
-.seat input[type="checkbox"]:checked + .seat-number {
+.seat input[type="checkbox"]:checked+.seat-number {
     background-color: green;
     color: white;
     border-color: green;
@@ -93,26 +124,27 @@
         flex-direction: column;
         align-items: center;
     }
-    
+
     .seat-row {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         justify-content: center;
     }
-    
+
     .seat {
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
-        width: 50px; /* Adjust width as needed */
+        width: 50px;
+        /* Adjust width as needed */
     }
-    
+
     .seat input[type="checkbox"] {
         display: none;
     }
-    
+
     .seat-number {
         display: inline-block;
         width: 40px;
@@ -125,10 +157,11 @@
         font-size: 16px;
         color: #333;
         cursor: pointer;
-        user-select: none; /* Prevents text selection */
+        user-select: none;
+        /* Prevents text selection */
     }
-    
-    .seat input[type="checkbox"]:checked + .seat-number {
+
+    .seat input[type="checkbox"]:checked+.seat-number {
         background-color: green;
         color: white;
         border-color: green;
@@ -145,13 +178,15 @@
     display: flex;
     justify-content: space-around;
     margin: 20px;
-    flex-wrap: wrap; /* Ensures wrapping on smaller screens if necessary */
+    flex-wrap: wrap;
+    /* Ensures wrapping on smaller screens if necessary */
 }
 
 .status-item {
     display: flex;
     align-items: center;
-    margin: 0 10px; /* Adjust as needed */
+    margin: 0 10px;
+    /* Adjust as needed */
 }
 
 .color-box {
