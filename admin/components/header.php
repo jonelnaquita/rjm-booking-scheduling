@@ -47,6 +47,11 @@
   <!--DateTime Picker-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+  <!-- SweetAlert2 CSS and JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.2/dist/sweetalert2.all.min.js"></script>
+
+
   <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
   <script src="../assets/vendors/chart.js/chart.umd.js"></script>
   <script src="../assets/vendors/datatables.net/jquery.dataTables.js"></script>
