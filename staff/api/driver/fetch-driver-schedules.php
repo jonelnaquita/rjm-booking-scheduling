@@ -67,12 +67,12 @@ if (isset($_SESSION['bus_number'])) {
     $result = $stmt->get_result();
 
     $schedule = array();
-    
+
     // Fetch the result and store it in an array
     while ($row = $result->fetch_assoc()) {
         $schedule[] = $row;
     }
-    
+
     // Return the schedule as JSON
     echo json_encode($schedule);
 } else {

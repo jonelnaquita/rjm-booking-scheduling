@@ -197,10 +197,6 @@
     border: 1px solid #000;
 }
 
-.priority-seat {
-    background-color: yellow;
-}
-
 .booked-seat {
     background-color: red;
 }

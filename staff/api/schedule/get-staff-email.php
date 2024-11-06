@@ -8,8 +8,8 @@ if (isset($_POST['bus_id'])) {
     // Prepare SQL query to retrieve the staff email based on the bus ID
     $query = "SELECT tblstaff.email, tblstaff.firstname, tblbus.bus_number, tblstaff.role FROM tblstaff
               INNER JOIN tblbus ON tblstaff.bus_number = tblbus.bus_id
-              WHERE tblstaff.bus_number = ? AND tblstaff.role = 'Driver' OR tblstaff.role = 'Conductor'";
-    
+              WHERE tblstaff.bus_number = ? AND (tblstaff.role = 'Driver' OR tblstaff.role = 'Conductor')";
+
     // Prepare statement
     if ($stmt = $conn->prepare($query)) {
         $stmt->bind_param("i", $bus_id); // Bind bus_id as an integer

@@ -149,10 +149,6 @@
 
                 <div class="seat-status">
                     <div class="status-item">
-                        <span class="color-box priority-seat"></span>
-                        <label>Priority Seats</label>
-                    </div>
-                    <div class="status-item">
                         <span class="color-box booked-seat"></span>
                         <label>Booked Seats</label>
                     </div>

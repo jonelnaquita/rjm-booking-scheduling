@@ -3,7 +3,7 @@ session_start();
 include_once '../../../models/conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $staff_id = $_SESSION['staff']; // Get the admin_id from the session
+    $staff_id = $_SESSION['staff'];
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
@@ -20,6 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verify the current password
     if (!password_verify($current_password, $db_password)) {
         echo "The current password is incorrect.";
+        exit();
+    }
+
+    // Check if the new password meets security requirements
+    if (
+        strlen($new_password) < 8 ||
+        !preg_match('/[A-Z]/', $new_password) ||
+        !preg_match('/[a-z]/', $new_password) ||
+        !preg_match('/[0-9]/', $new_password) ||
+        !preg_match('/[!@#$%^&*]/', $new_password)
+    ) {
+        echo "New password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
         exit();
     }
 

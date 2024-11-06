@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../../../models/conn.php'; // Adjust to your database connection file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -50,6 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($stmt, 'iissss', $from_id, $to_id, $departure_date, $departure_time, $fare, $bus_id);
 
         if (mysqli_stmt_execute($stmt)) {
+            // Get the schedule_id of the inserted schedule
+            $schedule_id = mysqli_insert_id($conn);
+
+            // Log action details
+            $staff_id = $_SESSION['staff'];
+            $role = "Terminal Staff";
+            $action = "Added a Schedule";
+            $date_created = date('Y-m-d H:i:s');
+            $category = "Schedule";
+
+            // Insert into tbllogs
+            $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
+            if ($log_stmt = $conn->prepare($log_query)) {
+                $log_stmt->bind_param('iissss', $staff_id, $schedule_id, $category, $role, $action, $date_created);
+                $log_stmt->execute();
+                $log_stmt->close();
+            } else {
+                http_response_code(500);
+                echo 'Error logging action.';
+                exit();
+            }
+
             echo 'Schedule saved successfully.';
         } else {
             http_response_code(500);

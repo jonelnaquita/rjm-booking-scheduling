@@ -1,8 +1,9 @@
 <?php
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../vendor/autoload.php'; // Include PHPMailer and autoload dependencies
+require '../../../admin/vendor/autoload.php'; // Include PHPMailer and autoload dependencies
 require '../../../models/conn.php';  // Include your database connection script
 include '../../../models/env.php';
 
@@ -34,6 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $update_stmt = $conn->prepare($update_query);
         $update_stmt->bind_param('i', $booking_id); // Corrected to use 'i' for integer
         $update_stmt->execute();
+
+        $staff_id = $_SESSION['staff'];
+        $role = "Terminal Staff";
+        $action = "Cancelled Booking"; // Define the action taken, e.g., "Booked ticket"
+        $date_created = date('Y-m-d H:i:s'); // Current date and time
+        $category = "Booking";
+
+        $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
+        $log_stmt = $conn->prepare($log_query);
+        $log_stmt->bind_param('iissss', $staff_id, $booking_id, $category, $role, $action, $date_created);
+        $log_stmt->execute();
 
         // Check if the update was successful
         if ($update_stmt->affected_rows > 0) {
@@ -73,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Send SMS
                 include_once 'send-sms.php';
                 $sms_receiver = $booking_details['mobile_number'];
-                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking has been cancelled due to the following reason:" .$cancellation_reason. 
+                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking has been cancelled due to the following reason: " . $cancellation_reason;
                 $sms_result = gw_send_sms($ONEWAYUSERNAME, $ONEWAYPASSWORD, $ONEWAYFROM, $sms_receiver, $sms_message);
 
                 echo 'Booking has been successfully cancelled and an email notification has been sent.';

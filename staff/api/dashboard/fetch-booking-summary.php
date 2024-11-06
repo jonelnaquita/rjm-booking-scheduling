@@ -16,10 +16,11 @@ $terminal_id = isset($_GET['terminal_id']) ? intval($_GET['terminal_id']) : 0;
 $totalBookingsQuery = "
     SELECT COUNT(*) AS totalBookings 
     FROM tblbooking 
-    JOIN tblschedule ON tblbooking.scheduleDeparture_id = tblschedule.schedule_id OR tblbooking.scheduleArrival_id = tblschedule.schedule_id
-    JOIN tblroutefrom ON tblschedule.destination_from = tblroutefrom.from_id
-    WHERE tblroutefrom.from_id = ? AND tblbooking.status = 'Confirmed'
+    LEFT JOIN tblschedule ON tblbooking.scheduleDeparture_id = tblschedule.schedule_id OR tblbooking.scheduleArrival_id = tblschedule.schedule_id
+    LEFT JOIN tblroutefrom ON tblschedule.destination_from = tblroutefrom.from_id
+    WHERE tblroutefrom.from_id = ? AND tblbooking.status = 'Confirmed' 
 ";
+
 $totalBookingsStmt = $conn->prepare($totalBookingsQuery);
 $totalBookingsStmt->bind_param("i", $terminal_id);
 $totalBookingsStmt->execute();
@@ -39,7 +40,7 @@ $todaysBookingsQuery = "
     FROM tblbooking 
     JOIN tblschedule ON tblbooking.scheduleDeparture_id = tblschedule.schedule_id OR tblbooking.scheduleArrival_id = tblschedule.schedule_id
     JOIN tblroutefrom ON tblschedule.destination_from = tblroutefrom.from_id
-    WHERE DATE(tblbooking.date_created) = ? AND tblroutefrom.from_id = ?
+    WHERE DATE(tblbooking.date_created) = ? AND tblroutefrom.from_id = ? AND tblbooking.status = 'Confirmed'
 ";
 $todaysBookingsStmt = $conn->prepare($todaysBookingsQuery);
 $todaysBookingsStmt->bind_param("si", $todaysDate, $terminal_id);

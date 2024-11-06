@@ -8,8 +8,7 @@ try {
     // Generate passenger ID
     $year = date("Y");
     $randomPart1 = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    $randomPart2 = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    $passenger_id = "RJM-" . $year . "-" . $randomPart1 . "-" . $randomPart2;
+    $passenger_id = "RJM-" . $year . "-" . $randomPart1;
 
     // Get form data
     $firstName = $_POST['firstName'];
@@ -63,19 +62,17 @@ try {
                    VALUES (?, ?, ?)";
     $stmtPayment = $conn->prepare($sqlPayment);
     $stmtPayment->bind_param("sss", $file_name, $reference_number, $passenger_id);
-    
+
     if (!$stmtPayment->execute()) {
         throw new Exception("Error saving payment data: " . $stmtPayment->error);
     }
-
-    // Payment succeeded, proceed to other operations
 
     // Insert into tblpassenger
     $sqlPassenger = "INSERT INTO tblpassenger (passenger_code, firstname, middlename, lastname, city, email, mobile_number, full_address) 
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmtPassenger = $conn->prepare($sqlPassenger);
     $stmtPassenger->bind_param("ssssssss", $passenger_id, $firstName, $middleName, $lastName, $city, $email, $mobile_number, $fullAddress);
-    
+
     if (!$stmtPassenger->execute()) {
         throw new Exception("Error saving passenger data: " . $stmtPassenger->error);
     }
@@ -103,7 +100,7 @@ try {
                      VALUES (?, ?, ?)";
         $stmtSeats = $conn->prepare($sqlSeats);
         $stmtSeats->bind_param("sss", $passenger_id, $scheduleDeparture_id, $seat);
-        
+
         if (!$stmtSeats->execute()) {
             throw new Exception("Error saving departure seat data: " . $stmtSeats->error);
         }
@@ -114,8 +111,9 @@ try {
         foreach ($arrivalSeats as $seat) {
             $sqlSeats = "INSERT INTO tblseats (passenger_id, schedule_id, seat_number) 
                          VALUES (?, ?, ?)";
+            $stmtSeats = $conn->prepare($sqlSeats);
             $stmtSeats->bind_param("sss", $passenger_id, $scheduleArrival_id, $seat);
-            
+
             if (!$stmtSeats->execute()) {
                 throw new Exception("Error saving arrival seat data: " . $stmtSeats->error);
             }
@@ -125,16 +123,20 @@ try {
     // Commit the transaction
     mysqli_commit($conn);
 
+    // Include the email sending script
+    include 'send-email.php';
+
     // Success response
     echo json_encode(["success" => true, "passenger_id" => $passenger_id]);
 
 } catch (Exception $e) {
     // Rollback the transaction on failure
     mysqli_rollback($conn);
-    
+
     // Return error response
     echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
 
+// Close the database connection
 $conn->close();
 ?>

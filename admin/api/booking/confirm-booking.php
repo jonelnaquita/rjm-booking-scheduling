@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require '../../vendor/autoload.php'; // Include PHPMailer and autoload dependencies
 require '../../../models/conn.php'; // Include your database connection script
-include '../../../models/env.php';
+include '../../../models/env.php'; // Include environment variables
 
 header('Content-Type: application/json');
 
@@ -14,11 +14,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // SQL Query to fetch booking, schedule, passenger, bus, and bus type info
     $query = "
         SELECT 
-            b.book_id, b.trip_type, p.passenger_code, p.email, p.mobile_number, b.passengers, b.status,
-            sd.departure_date, sd.departure_time, sa.departure_date as arrival_date, sa.departure_time as arrival_time,
-            dd.destination_from as destination_departure, da.destination_from as destination_arrival,
-            bd.bus_number as bus_departure, ba.bus_number as bus_arrival, bt.bus_type, p.firstname, p.middlename, p.lastname,
-            CONCAT(p.firstname, ' ', p.lastname) as fullname
+            b.book_id, 
+            b.trip_type, 
+            p.passenger_code, 
+            p.email, 
+            p.mobile_number, 
+            b.passengers, 
+            b.status,
+            sd.departure_date, 
+            sd.departure_time, 
+            sa.departure_date as arrival_date, 
+            sa.departure_time as arrival_time,
+            dd.destination_from as destination_departure, 
+            da.destination_from as destination_arrival,
+            bd.bus_number as bus_departure, 
+            ba.bus_number as bus_arrival, 
+            bt.bus_type, 
+            p.firstname, 
+            p.middlename, 
+            p.lastname,
+            CONCAT(p.firstname, ' ', p.lastname) as fullname,
+            GROUP_CONCAT(DISTINCT s.seat_number ORDER BY s.seat_number SEPARATOR ', ') as seats_departure,
+            GROUP_CONCAT(DISTINCT s_arrival.seat_number ORDER BY s_arrival.seat_number SEPARATOR ', ') as seats_arrival
         FROM 
             tblbooking b
         LEFT JOIN tblpassenger p ON p.passenger_code = b.passenger_id
@@ -29,10 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         LEFT JOIN tblbus bd ON bd.bus_id = sd.bus_id
         LEFT JOIN tblbus ba ON ba.bus_id = sa.bus_id
         LEFT JOIN tblbustype bt ON bt.bustype_id = bd.bus_type
+        LEFT JOIN tblseats s ON s.passenger_id = p.passenger_code AND s.schedule_id = b.scheduleDeparture_id
+        LEFT JOIN tblseats s_arrival ON s_arrival.passenger_id = p.passenger_code AND s_arrival.schedule_id = b.scheduleArrival_id
         WHERE 
             b.book_id = ?
+        GROUP BY 
+            b.book_id
     ";
- 
+
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $booking_id);
     $stmt->execute();
@@ -51,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Initialize PHPMailer
         $mail = new PHPMailer(true);
-        
+
         try {
             // Update booking status to "Confirmed"
             $update_query = "UPDATE tblbooking SET status = 'Confirmed' WHERE book_id = ?";
@@ -63,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = $SMTP_EMAIL;
+            $mail->Username = $SMTP_EMAIL; // Make sure to set this in your env file
             $mail->Password = $SMTP_PASSWORD; // Consider using environment variables for security
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = $SMTP_PORT;
