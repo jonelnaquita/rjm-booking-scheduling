@@ -21,6 +21,7 @@
         <div class="ticket-details" style="padding: 20px;">
             <div class="ticket-info" style="font-size: 14px; margin-bottom: 20px; color: #333; line-height: 10px;">
                 <p><strong>Passenger ID:</strong> <?= $booking_details['passenger_code']; ?></p>
+                <p><strong>Ticket #:</strong> <?= $ticket_number; ?></p>
                 <p><strong>Number of Passenger/s:</strong> <?= $booking_details['passengers']; ?></p>
                 <p><strong>Date of Issue:</strong> <?= date('d F Y'); ?></p>
                 <p><strong>Status:</strong> Confirmed</p>
