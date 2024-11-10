@@ -10,6 +10,7 @@ include '../../../models/env.php';
 
 if (isset($_POST['email'], $_POST['firstname'], $_POST['from_id'], $_POST['to_id'], $_POST['departure_dates'], $_POST['departure_time'], $_POST['bus_id'])) {
     $email = $_POST['email'];
+    $mobile_number = $_POST['mobile_number'];
     $firstname = $_POST['firstname'];
     $from_id = $_POST['from_id'];
     $to_id = $_POST['to_id'];
@@ -41,7 +42,7 @@ if (isset($_POST['email'], $_POST['firstname'], $_POST['from_id'], $_POST['to_id
 
     // Initialize PHPMailer
     $mail = new PHPMailer(true);
-    
+
     try {
         // Server settings
         $mail->isSMTP();
@@ -76,12 +77,12 @@ if (isset($_POST['email'], $_POST['firstname'], $_POST['from_id'], $_POST['to_id
 
         // Send SMS
         include_once '../booking/send-sms.php';
-        $sms_receiver = $booking_details['mobile_number'];
+        $sms_receiver = $mobile_number;
         $sms_message = "Hello " . $firstname . ", here are your travel details with RJM Transport Corp: " .
-               "Bus No. " . $bus_id . 
-               ". Departure Date: " . $departure_dates . 
-               " at " . $departure_time . ".";
-        $sms_result = gw_send_sms($ONEWAYUSERNAME, $ONEWAYPASSWORD, $ONEWAYFROM, $sms_receiver, $sms_message);
+            "Bus No. " . $bus_id .
+            ". Departure Date: " . $departure_dates .
+            " at " . $departure_time . ".";
+        $response = sendSMS($sms_receiver, $sms_message);
 
         // Send the email
         if ($mail->send()) {

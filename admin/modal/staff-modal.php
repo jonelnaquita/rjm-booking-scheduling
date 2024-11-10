@@ -43,6 +43,11 @@
               <small id="email-error" class="text-danger">This email is already taken.</small>
             </div>
             <div class="form-group">
+              <label for="mobile-number">Mobile Number</label>
+              <input type="number" class="form-control" id="mobile-number" name="mobile-number"
+                placeholder="09xxxxxxxxx" required>
+            </div>
+            <div class="form-group">
               <label for="password">Password</label>
               <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"
                 required>
@@ -94,6 +99,11 @@
                 <label for="lastname">Last Name</label>
                 <input type="text" class="form-control" id="lastname-2" name="lastname" placeholder="Enter last name"
                   required>
+              </div>
+              <div class="form-group">
+                <label for="mobile-number">Mobile Number</label>
+                <input type="number" class="form-control" id="mobile-number-2" name="mobile-number"
+                  placeholder="09xxxxxxxxx" required>
               </div>
               <div class="form-group">
                 <label for="role">Role</label>

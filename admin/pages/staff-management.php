@@ -446,6 +446,7 @@ include '../components/header.php';
                 // Populate the input fields with the existing details
                 $('#firstname-2').val(response.firstname);
                 $('#lastname-2').val(response.lastname);
+                $('#mobile-number-2').val(response.mobile_number);
                 $('#role-2').val(response.role).trigger('change');
                 $('#terminal-2').val(response.terminal).trigger('change');
                 $('#bus_number-2').val(response.bus_number).trigger('change');
@@ -470,6 +471,7 @@ include '../components/header.php';
             staff_id: staff_id,
             firstname: $('#firstname-2').val(),
             lastname: $('#lastname-2').val(),
+            mobile_number: $('#mobile-number-2').val(),
             role: $('#role-2').val(),
             terminal: $('#terminal-2').val(),
             bus_number: $('#bus_number-2').val()

@@ -6,7 +6,7 @@ if (isset($_POST['bus_id'])) {
     $bus_id = $_POST['bus_id'];
 
     // Prepare SQL query to retrieve the staff email based on the bus ID
-    $query = "SELECT tblstaff.email, tblstaff.firstname, tblbus.bus_number, tblstaff.role FROM tblstaff
+    $query = "SELECT tblstaff.email, tblstaff.firstname, tblbus.bus_number, tblstaff.role, tblstaff.mobile_number FROM tblstaff
               INNER JOIN tblbus ON tblstaff.bus_number = tblbus.bus_id
               WHERE tblstaff.bus_number = ? AND (tblstaff.role = 'Driver' OR tblstaff.role = 'Conductor')";
 
@@ -23,9 +23,10 @@ if (isset($_POST['bus_id'])) {
             $email = $row['email'];
             $firstname = $row['firstname'];
             $bus_number = $row['bus_number'];
+            $mobile_number = $row['mobile_number'];
 
             // Return the email and fullname as a JSON response
-            echo json_encode(['email' => $email, 'firstname' => $firstname, 'bus_number' => $bus_number]);
+            echo json_encode(['email' => $email, 'firstname' => $firstname, 'bus_number' => $bus_number, 'mobile_number' => $mobile_number]);
         } else {
             // If no staff is found for the bus ID, return an error
             echo json_encode(['error' => 'No staff found for this bus.']);

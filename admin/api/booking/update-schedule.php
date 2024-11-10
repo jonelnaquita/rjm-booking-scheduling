@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../../../models/conn.php';  // Include your database connection
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -69,6 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 }
             }
+
+            $staff_id = $_SESSION['admin'];
+            $role = "Admin";
+            $action = "Rescheduled a Booking"; // Define the action taken, e.g., "Booked ticket"
+            $date_created = date('Y-m-d H:i:s'); // Current date and time
+            $category = "Booking";
+
+            $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
+            $log_stmt = $conn->prepare($log_query);
+            $log_stmt->bind_param('iissss', $staff_id, $booking_id, $category, $role, $action, $date_created);
+            $log_stmt->execute();
 
             // Commit transaction
             $conn->commit();

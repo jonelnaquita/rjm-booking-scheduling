@@ -423,6 +423,7 @@ include '../components/header.php';
                             type: 'POST',
                             data: {
                                 email: response.email,
+                                mobile_number: response.mobile_number,
                                 firstname: response.firstname,
                                 from_id: from_id,
                                 to_id: to_id,

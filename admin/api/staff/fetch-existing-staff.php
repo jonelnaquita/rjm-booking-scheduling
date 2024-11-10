@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $staff_id = $_POST['staff_id'];
 
     // Prepare SQL query to fetch staff details
-    $query = "SELECT firstname, lastname, role, terminal, bus_number FROM tblstaff WHERE staff_id = ?";
+    $query = "SELECT firstname, lastname, role, mobile_number, terminal, bus_number FROM tblstaff WHERE staff_id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $staff_id);
     $stmt->execute();

@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $terminal = $_POST['terminal'];
     $bus_number = isset($_POST['bus_number']) && !empty($_POST['bus_number']) ? $_POST['bus_number'] : '0';
     $email = $_POST['email'];
+    $mobile_number = $_POST['mobile-number'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
     $status = "Active";
 
@@ -25,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert the data into the database
-    $query = "INSERT INTO tblstaff (firstname, lastname, email, password, bus_number, status, role, terminal) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO tblstaff (firstname, lastname, email, mobile_number, password, bus_number, status, role, terminal) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssssssss", $firstname, $lastname, $email, $password, $bus_number, $status, $role, $terminal);
+    $stmt->bind_param("sssssssss", $firstname, $lastname, $email, $mobile_number, $password, $bus_number, $status, $role, $terminal);
 
     if ($stmt->execute()) {
         echo 'Staff saved successfully!';
