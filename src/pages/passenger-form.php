@@ -99,12 +99,17 @@ include '../api/store-schedule.php';
             this.value = this.value.toUpperCase();
         });
 
+        // Allow only letters (no numbers or special characters) in first name, middle name, and last name
+        $('#firstName, #lastName, #middleName, #city').on('input', function () {
+            this.value = this.value.replace(/[^A-Za-z\s]/g, ''); // Allow only letters and spaces
+        });
+
         // Allow only numbers in the mobile input and enforce maxlength
         $('#mobile').on('input', function () {
-            // Remove non-digit characters and limit to 11 characters
-            this.value = this.value.replace(/\D/g, '').slice(0, 11);
+            this.value = this.value.replace(/\D/g, '').slice(0, 11); // Remove non-digit characters and limit to 11 characters
         });
     });
+
 </script>
 
 <script>
