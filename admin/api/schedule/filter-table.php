@@ -43,17 +43,17 @@ $query .= " ORDER BY s.schedule_id ASC";
 
 $result = mysqli_query($conn, $query);
 
-if(mysqli_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
     $counter = 1;
-    while($row = mysqli_fetch_assoc($result)) {
+    while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr>";
         echo "<td>" . $counter . "</td>";
-        echo "<td> <label class='badge badge-info'>". htmlspecialchars($row['destination_from']) ."</label> to <label class='badge badge-danger'>". htmlspecialchars($row['trip_to']) ."</label></td>";
+        echo "<td> <label class='badge badge-info'>" . htmlspecialchars($row['destination_from']) . "</label> to <label class='badge badge-danger'>" . htmlspecialchars($row['trip_to']) . "</label></td>";
         echo "<td>" . date('F j, Y', strtotime($row['departure_date'])) . "</td>";
         echo "<td>" . date('h:i A', strtotime($row['departure_time'])) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_number']) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_type']) . "</td>";
-        echo "<td> ₱" . htmlspecialchars($row['fare']) . "</td>"; 
+        echo "<td> ₱" . htmlspecialchars($row['fare']) . "</td>";
         // echo "<td> <label class='badge badge-success'>". htmlspecialchars($row['status']) ."</label></td>";
         echo "<td>
                 <div class='table-data-feature'>

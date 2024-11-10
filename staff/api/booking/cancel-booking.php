@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Send SMS
                 include_once 'send-sms.php';
                 $sms_receiver = $booking_details['mobile_number'];
-                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking has been cancelled due to the following reason: " . $cancellation_reason;
-                $sms_result = gw_send_sms($ONEWAYUSERNAME, $ONEWAYPASSWORD, $ONEWAYFROM, $sms_receiver, $sms_message);
+                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking has been cancelled due to the following reason: " . $cancellation_reason . ". We apologize for any inconvenience caused.";
+                $response = sendSMS($sms_receiver, $sms_message);
 
                 echo 'Booking has been successfully cancelled and an email notification has been sent.';
             } catch (Exception $e) {

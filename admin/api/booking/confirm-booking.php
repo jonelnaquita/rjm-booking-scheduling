@@ -1,4 +1,5 @@
 <?php
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -74,43 +75,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail = new PHPMailer(true);
 
         try {
-            // Update booking status to "Confirmed"
-            $update_query = "UPDATE tblbooking SET status = 'Confirmed' WHERE book_id = ?";
+            $ticket_number = random_int(100000, 999999);
+
+            // Update booking status to "Confirmed" and set the ticket_number
+            $update_query = "UPDATE tblbooking SET status = 'Confirmed', ticket_number = ? WHERE book_id = ?";
             $update_stmt = $conn->prepare($update_query);
-            $update_stmt->bind_param('i', $booking_id);
+            $update_stmt->bind_param('ii', $ticket_number, $booking_id);
             $update_stmt->execute();
 
-            // SMTP Configuration
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = $SMTP_EMAIL; // Make sure to set this in your env file
-            $mail->Password = $SMTP_PASSWORD; // Consider using environment variables for security
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = $SMTP_PORT;
-
-            // Recipients
-            $mail->setFrom('rjmtransportcorp00@gmail.com', 'RJM Transport Corp');
-            $mail->addAddress($email); // Send email to passenger
-
-            // Email Content
-            $mail->isHTML(true);
-            $mail->Subject = 'Your E-Ticket Confirmation';
-            $mail->Body = $e_ticket_content;
-
-            // Send the email
-            $mail->send();
-
-            // Send SMS
-            include_once 'send-sms.php';
-            $sms_receiver = $booking_details['mobile_number'];
-            $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Please check your email for your electronic ticket.";
-            $sms_result = gw_send_sms($ONEWAYUSERNAME, $ONEWAYPASSWORD, $ONEWAYFROM, $sms_receiver, $sms_message);
-
+            // Ensure booking status was updated
             if ($update_stmt->affected_rows > 0) {
-                echo json_encode(['success' => true, 'message' => 'E-ticket has been sent successfully and booking status updated. SMS result: ' . htmlspecialchars($sms_result)]);
+                // Log the action
+                if (isset($_SESSION['admin'])) {
+                    $staff_id = $_SESSION['admin'];
+                    $role = "Admin";
+                    $action = "Confirmed Booking"; // Define the action taken, e.g., "Booked ticket"
+                    $category = "Booking";
+                    $date_created = date('Y-m-d H:i:s'); // Current date and time
+
+                    $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
+                    $log_stmt = $conn->prepare($log_query);
+                    $log_stmt->bind_param('iissss', $staff_id, $booking_id, $category, $role, $action, $date_created);
+                    $log_stmt->execute();
+                }
+
+                // SMTP Configuration
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = $SMTP_EMAIL;
+                $mail->Password = $SMTP_PASSWORD; // Consider using environment variables for security
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = $SMTP_PORT;
+
+                // Recipients
+                $mail->setFrom('rjmtransportcorp00@gmail.com', 'RJM Transport Corp');
+                $mail->addAddress($email); // Send email to passenger
+
+                // Email Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Your E-Ticket Confirmation';
+                $mail->Body = $e_ticket_content;
+
+                // Send the email
+                $mail->send();
+
+                // Send SMS
+                include_once 'send-sms.php';
+                $sms_receiver = $booking_details['mobile_number'];
+                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Your ticket number is: " . $ticket_number . ". Please check your email for your electronic ticket.";
+                $response = sendSMS($sms_receiver, $sms_message);
+
+                echo json_encode(['success' => true, 'message' => 'E-ticket has been sent successfully and booking status updated. SMS result: ' . htmlspecialchars($response)]);
             } else {
-                echo json_encode(['success' => false, 'message' => 'E-ticket sent, but failed to update booking status. SMS result: ' . htmlspecialchars($sms_result)]);
+                echo json_encode(['success' => false, 'message' => 'E-ticket sent, but failed to update booking status.']);
             }
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => "Error sending email: {$mail->ErrorInfo}"]);

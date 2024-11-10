@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -75,10 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail = new PHPMailer(true);
 
         try {
-            // Update booking status to "Confirmed"
-            $update_query = "UPDATE tblbooking SET status = 'Confirmed' WHERE book_id = ?";
+            $ticket_number = random_int(100000, 999999);
+
+            // Update booking status to "Confirmed" and set the ticket_number
+            $update_query = "UPDATE tblbooking SET status = 'Confirmed', ticket_number = ? WHERE book_id = ?";
             $update_stmt = $conn->prepare($update_query);
-            $update_stmt->bind_param('i', $booking_id);
+            $update_stmt->bind_param('ii', $ticket_number, $booking_id);
             $update_stmt->execute();
 
             // Ensure booking status was updated
@@ -121,10 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Send SMS
                 include_once 'send-sms.php';
                 $sms_receiver = $booking_details['mobile_number'];
-                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Please check your email for your electronic ticket.";
-                $sms_result = gw_send_sms($ONEWAYUSERNAME, $ONEWAYPASSWORD, $ONEWAYFROM, $sms_receiver, $sms_message);
+                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Your ticket number is: " . $ticket_number . ". Please check your email for your electronic ticket.";
+                $response = sendSMS($sms_receiver, $sms_message);
 
-                echo json_encode(['success' => true, 'message' => 'E-ticket has been sent successfully and booking status updated. SMS result: ' . htmlspecialchars($sms_result)]);
+                echo json_encode(['success' => true, 'message' => 'E-ticket has been sent successfully and booking status updated. SMS result: ' . htmlspecialchars($response)]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'E-ticket sent, but failed to update booking status.']);
             }

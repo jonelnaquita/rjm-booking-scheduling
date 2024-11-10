@@ -1,23 +1,45 @@
 <?php
-function gw_send_sms($user, $pass, $sms_from, $sms_to, $sms_msg) {
-    $query_string = "api.aspx?apiusername=" . urlencode($user)
-        . "&apipassword=" . urlencode($pass)
-        . "&senderid=" . urlencode($sms_from)
-        . "&mobileno=" . urlencode($sms_to)
-        . "&message=" . urlencode($sms_msg)
-        . "&languagetype=1";
+function sendSMS($number, $message)
+{
+    $ch = curl_init();
 
-    $url = "http://gateway.onewaysms.com.au:10001/" . $query_string;
-    $response = @file_get_contents($url);
+    // Define your API key and sender name here
+    $apiKey = 'f65291a797424a4ff2e7c424ceac99c0'; // Your API KEY
+    $senderName = 'RJM';
 
-    if ($response !== false) {
-        if (trim($response) > 0) {
-            return "success";
-        } else {
-            return "fail: " . htmlspecialchars($response);
-        }
+    // Set up parameters for the request
+    $parameters = array(
+        'apikey' => $apiKey,
+        'number' => $number,
+        'message' => $message,
+        'sendername' => $senderName
+    );
+
+    // Set cURL options for the API request
+    curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute the request and store the response
+    $output = curl_exec($ch);
+
+    // Check for errors
+    if ($output === false) {
+        return "Error: " . curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    // Decode the API response to check for success or error
+    $response = json_decode($output, true);
+
+    // Check if response contains a success status
+    if (isset($response['status']) && $response['status'] === 'success') {
+        return "Success: Message sent successfully.";
     } else {
-        return "fail: No contact with gateway";
+        // Return the error message if available
+        return "Error: " . ($response['message'] ?? 'Unknown error occurred.');
     }
 }
 ?>
