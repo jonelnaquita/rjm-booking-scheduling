@@ -1,7 +1,7 @@
 <?php
 include '../../../models/conn.php'; // Adjust to your DB connection
 
-$year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+$year = isset($_GET['year']) ? (int) $_GET['year'] : date('Y');
 
 $query = "
     SELECT 

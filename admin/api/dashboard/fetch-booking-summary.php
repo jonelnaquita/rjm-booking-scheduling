@@ -1,7 +1,9 @@
 <?php
-include '../../../models/conn.php'; // Adjust your path to the database connection
+include '../../../models/conn.php';
 
-// Initialize the response array
+$month = isset($_GET['month']) ? $_GET['month'] : date('m');
+$year = isset($_GET['year']) ? $_GET['year'] : date('Y');
+
 $data = [
     'totalBookings' => 0,
     'todaysBookings' => 0,
@@ -9,52 +11,41 @@ $data = [
     'totalRevenue' => 0
 ];
 
-// Get total number of bookings
-$totalBookingsQuery = "SELECT COUNT(*) AS totalBookings FROM tblbooking WHERE status = 'Confirmed'";
+// Total confirmed bookings for the selected month and year
+$totalBookingsQuery = "SELECT COUNT(*) AS totalBookings 
+                       FROM tblbooking 
+                       WHERE status = 'Confirmed' 
+                         AND YEAR(date_created) = '$year' 
+                         AND MONTH(date_created) = '$month'";
 $totalBookingsResult = mysqli_query($conn, $totalBookingsQuery);
+$data['totalBookings'] = $totalBookingsResult ? mysqli_fetch_assoc($totalBookingsResult)['totalBookings'] : 0;
 
-if ($totalBookingsResult) {
-    $totalBookings = mysqli_fetch_assoc($totalBookingsResult)['totalBookings'];
-    $data['totalBookings'] = $totalBookings;
-} else {
-    error_log("Error fetching total bookings: " . mysqli_error($conn)); // Log any SQL errors
-}
-
-// Get today's bookings
+// Today's bookings
 $todaysDate = date('Y-m-d');
-$todaysBookingsQuery = "SELECT COUNT(*) AS todaysBookings FROM tblbooking WHERE DATE(date_created) = '$todaysDate'";
+$todaysBookingsQuery = "SELECT COUNT(*) AS todaysBookings 
+                        FROM tblbooking 
+                        WHERE DATE(date_created) = '$todaysDate'";
 $todaysBookingsResult = mysqli_query($conn, $todaysBookingsQuery);
+$data['todaysBookings'] = $todaysBookingsResult ? mysqli_fetch_assoc($todaysBookingsResult)['todaysBookings'] : 0;
 
-if ($todaysBookingsResult) {
-    $todaysBookings = mysqli_fetch_assoc($todaysBookingsResult)['todaysBookings'];
-    $data['todaysBookings'] = $todaysBookings;
-} else {
-    error_log("Error fetching today's bookings: " . mysqli_error($conn));
-}
-
-// Get the total number of passengers
-$totalPassengersQuery = "SELECT SUM(passengers) AS totalPassengers FROM tblbooking WHERE status = 'Confirmed'";
+// Total passengers for the selected month and year
+$totalPassengersQuery = "SELECT SUM(passengers) AS totalPassengers 
+                         FROM tblbooking 
+                         WHERE status = 'Confirmed' 
+                           AND YEAR(date_created) = '$year' 
+                           AND MONTH(date_created) = '$month'";
 $totalPassengersResult = mysqli_query($conn, $totalPassengersQuery);
+$data['totalPassengers'] = $totalPassengersResult ? mysqli_fetch_assoc($totalPassengersResult)['totalPassengers'] : 0;
 
-if ($totalPassengersResult) {
-    $totalPassengers = mysqli_fetch_assoc($totalPassengersResult)['totalPassengers'];
-    $data['totalPassengers'] = $totalPassengers;
-} else {
-    error_log("Error fetching total passengers: " . mysqli_error($conn));
-}
-
-// Get total revenue
-$totalRevenueQuery = "SELECT SUM(price) AS totalRevenue FROM tblbooking WHERE status = 'Confirmed'";
+// Total revenue for the selected month and year
+$totalRevenueQuery = "SELECT SUM(price) AS totalRevenue 
+                      FROM tblbooking 
+                      WHERE status = 'Confirmed' 
+                        AND YEAR(date_created) = '$year' 
+                        AND MONTH(date_created) = '$month'";
 $totalRevenueResult = mysqli_query($conn, $totalRevenueQuery);
+$data['totalRevenue'] = $totalRevenueResult ? mysqli_fetch_assoc($totalRevenueResult)['totalRevenue'] : 0;
 
-if ($totalRevenueResult) {
-    $totalRevenue = mysqli_fetch_assoc($totalRevenueResult)['totalRevenue'];
-    $data['totalRevenue'] = $totalRevenue;
-} else {
-    error_log("Error fetching total revenue: " . mysqli_error($conn));
-}
-
-// Return the data in JSON format
 header('Content-Type: application/json');
 echo json_encode($data);
 ?>
