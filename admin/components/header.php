@@ -110,7 +110,8 @@
   <!--DateTime Picker-->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
-
-
-
 </head>
+
+<?php
+date_default_timezone_set('Asia/Manila');
+?>
