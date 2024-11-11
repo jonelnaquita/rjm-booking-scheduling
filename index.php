@@ -115,7 +115,7 @@ include 'components/header.php'
                       <button type="button" class="btn-circle" id="btn-minus">-</button>
                       <span id="passenger-number" class="mx-3">1</span>
                       <button type="button" class="btn-circle" id="btn-plus">+</button>
-                      <input type="hidden" id="passenger-count" value="1" min="1" max="45" name="passenger">
+                      <input type="hidden" id="passenger-count" value="1" min="1" max="49" name="passenger">
                     </div>
                   </div>
                 </div>
