@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mobile_number = $_POST['mobile-number'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
     $status = "Active";
+    $rest_days = isset($_POST['rest_day']) ? (is_array($_POST['rest_day']) ? implode(',', $_POST['rest_day']) : $_POST['rest_day']) : '';
+
 
     // Validate email doesn't already exist
     $checkEmailQuery = "SELECT * FROM tblstaff WHERE email = ?";
@@ -26,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert the data into the database
-    $query = "INSERT INTO tblstaff (firstname, lastname, email, mobile_number, password, bus_number, status, role, terminal) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO tblstaff (firstname, lastname, email, mobile_number, password, bus_number, status, role, terminal, rest_day) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssssss", $firstname, $lastname, $email, $mobile_number, $password, $bus_number, $status, $role, $terminal);
+    $stmt->bind_param("ssssssssss", $firstname, $lastname, $email, $mobile_number, $password, $bus_number, $status, $role, $terminal, $rest_days);
 
     if ($stmt->execute()) {
         echo 'Staff saved successfully!';

@@ -146,6 +146,36 @@ include '../components/header.php';
     </div>
 </body>
 
+<!--Rest Day-->
+<script>
+    function limitCheckboxSelection() {
+        const checkboxes = document.querySelectorAll('.day-checkbox');
+        const checkedBoxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+
+        if (checkedBoxes.length > 2) {
+            document.getElementById('restDayLimitError').style.display = 'block';
+            checkedBoxes[2].checked = false; // Uncheck the third checkbox selected
+        } else {
+            document.getElementById('restDayLimitError').style.display = 'none';
+        }
+    }
+</script>
+
+<!-- Update Rest Day-->
+<script>
+    function limitCheckboxSelection2() {
+        const checkboxes = document.querySelectorAll('.day-checkbox-2');
+        const checkedBoxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+
+        if (checkedBoxes.length > 2) {
+            this.checked = false;
+            document.getElementById('restDayLimitError-2').style.display = 'inline';
+        } else {
+            document.getElementById('restDayLimitError-2').style.display = 'none';
+        }
+    }
+</script>
+
 <script>
     $(document).ready(function () {
         // Initialize Select2 with custom options
@@ -297,6 +327,7 @@ include '../components/header.php';
                 success: function (response) {
                     // Display success message or perform any action based on the response
                     toastr.success(response);
+                    console.log(response);
 
                     // Clear all form fields
                     $('#userForm')[0].reset();
@@ -433,17 +464,14 @@ include '../components/header.php';
 <!--Update Staff-->
 <script>
     $(document).on('click', '.btn-info', function () {
-        // Get the staff ID from the button's attribute
         var staff_id = $(this).attr('update-data-id');
 
-        // Make an AJAX request to get the staff details based on staff_id
         $.ajax({
-            url: '../api/staff/fetch-existing-staff.php', // PHP file to fetch staff details
+            url: '../api/staff/fetch-existing-staff.php',
             type: 'POST',
             data: { staff_id: staff_id },
             dataType: 'json',
             success: function (response) {
-                // Populate the input fields with the existing details
                 $('#firstname-2').val(response.firstname);
                 $('#lastname-2').val(response.lastname);
                 $('#mobile-number-2').val(response.mobile_number);
@@ -451,7 +479,17 @@ include '../components/header.php';
                 $('#terminal-2').val(response.terminal).trigger('change');
                 $('#bus_number-2').val(response.bus_number).trigger('change');
 
-                // Set the staff_id to a hidden field or use it when submitting the form
+                // Split rest_day and check the relevant checkboxes
+                let restDays = response.rest_day ? response.rest_day.split(',') : [];
+                $('.day-checkbox-2').each(function () {
+                    if (restDays.includes($(this).val())) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+
+                // Store staff_id for use when updating
                 $('#edit-staff-modal').data('staff-id', staff_id);
             },
             error: function (xhr, status, error) {
@@ -460,6 +498,7 @@ include '../components/header.php';
         });
     });
 </script>
+
 
 <script>
     $('.edit-staff-btn').click(function () {
@@ -474,8 +513,17 @@ include '../components/header.php';
             mobile_number: $('#mobile-number-2').val(),
             role: $('#role-2').val(),
             terminal: $('#terminal-2').val(),
-            bus_number: $('#bus_number-2').val()
+            bus_number: $('#bus_number-2').val(),
+            rest_day: [] // Initialize the rest_day array
         };
+
+        // Collect selected rest day values (check the checkboxes that are selected)
+        $('.day-checkbox-2:checked').each(function () {
+            formData.rest_day.push($(this).val()); // Add selected rest day to array
+        });
+
+        // Ensure the rest day array is populated
+        console.log(formData.rest_day); // Debugging step to verify the rest days
 
         // AJAX request to update the staff details
         $.ajax({
@@ -497,6 +545,8 @@ include '../components/header.php';
         });
     });
 </script>
+
+
 
 
 <!-- Delete Staff -->

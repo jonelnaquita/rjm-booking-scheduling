@@ -38,6 +38,33 @@
               </select>
             </div>
             <div class="form-group">
+              <label for="rest-day">Rest Day</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="restDayDropdown"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Select Rest Days (Max 2)
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="restDayDropdown">
+                  <li><label class="dropdown-item"><input type="checkbox" value="Sunday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Sunday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Monday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Monday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Tuesday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Tuesday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Wednesday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Wednesday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Thursday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Thursday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Friday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Friday</label></li>
+                  <li><label class="dropdown-item"><input type="checkbox" value="Saturday" name="rest_day[]"
+                        class="day-checkbox" onchange="limitCheckboxSelection()"> Saturday</label></li>
+                </ul>
+              </div>
+              <small id="restDayLimitError" class="text-danger" style="display: none;">You can only select up to 2
+                days.</small>
+            </div>
+            <div class="form-group">
               <label for="email">Email address</label>
               <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
               <small id="email-error" class="text-danger">This email is already taken.</small>
@@ -123,6 +150,34 @@
                   <!-- Options will be populated via JavaScript -->
                 </select>
               </div>
+              <div class="form-group">
+                <label for="rest-day">Rest Day</label>
+                <div class="dropdown">
+                  <button class="btn btn-outline-primary dropdown-toggle" type="button" id="restDayDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Rest Days (Max 2)
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="restDayDropdown">
+                    <li><label class="dropdown-item"><input type="checkbox" value="Sunday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Sunday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Monday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Monday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Tuesday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Tuesday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Wednesday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Wednesday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Thursday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Thursday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Friday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Friday</label></li>
+                    <li><label class="dropdown-item"><input type="checkbox" value="Saturday" name="rest_day[]"
+                          class="day-checkbox-2" onchange="limitCheckboxSelection2()"> Saturday</label></li>
+                  </ul>
+                </div>
+                <small id="restDayLimitError" class="text-danger" style="display: none;">You can only select up to 2
+                  days.</small>
+              </div>
+
               <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary edit-staff-btn">Save</button>
             </form>
