@@ -115,7 +115,7 @@ include 'components/header.php'
                       <button type="button" class="btn-circle" id="btn-minus">-</button>
                       <span id="passenger-number" class="mx-3">1</span>
                       <button type="button" class="btn-circle" id="btn-plus">+</button>
-                      <input type="hidden" id="passenger-count" value="1" min="1" name="passenger">
+                      <input type="hidden" id="passenger-count" value="1" min="1" max="45" name="passenger">
                     </div>
                   </div>
                 </div>
@@ -302,20 +302,35 @@ include 'components/header.php'
 </script>
 
 <script>
-  document.getElementById('btn-plus').addEventListener('click', function () {
-    let passengerCount = parseInt(document.getElementById('passenger-count').value);
-    passengerCount++;
-    document.getElementById('passenger-count').value = passengerCount;
-    document.getElementById('passenger-number').textContent = passengerCount;
-  });
+  document.addEventListener("DOMContentLoaded", function () {
+    const btnMinus = document.getElementById("btn-minus");
+    const btnPlus = document.getElementById("btn-plus");
+    const passengerNumber = document.getElementById("passenger-number");
+    const passengerCountInput = document.getElementById("passenger-count");
 
-  document.getElementById('btn-minus').addEventListener('click', function () {
-    let passengerCount = parseInt(document.getElementById('passenger-count').value);
-    if (passengerCount > 1) {
-      passengerCount--;
-      document.getElementById('passenger-count').value = passengerCount;
-      document.getElementById('passenger-number').textContent = passengerCount;
+    // Function to update the displayed passenger count
+    function updatePassengerCount(newCount) {
+      passengerNumber.textContent = newCount;
+      passengerCountInput.value = newCount;
     }
+
+    // Event listener for the "+" button
+    btnPlus.addEventListener("click", function () {
+      let count = parseInt(passengerCountInput.value);
+      if (count < 45) { // Check if count is less than the max limit
+        count++;
+        updatePassengerCount(count);
+      }
+    });
+
+    // Event listener for the "-" button
+    btnMinus.addEventListener("click", function () {
+      let count = parseInt(passengerCountInput.value);
+      if (count > 1) { // Ensure the count doesn't go below 1
+        count--;
+        updatePassengerCount(count);
+      }
+    });
   });
 </script>
 
