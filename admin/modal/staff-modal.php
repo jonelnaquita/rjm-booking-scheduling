@@ -186,6 +186,7 @@
           <!-- Update Password Tab -->
           <div class="tab-pane fade" id="update-password-tab" role="tabpanel" aria-labelledby="password-tab">
             <form id="passwordForm">
+              <input type="hidden" class="form-control staff-id" name="staff_id">
               <div class="form-group position-relative">
                 <label for="new-password">New Password</label>
                 <input type="password" class="form-control" id="new-password" name="new_password"
@@ -208,6 +209,7 @@
               <button type="button" class="btn btn-primary edit-password-btn">Save</button>
             </form>
           </div>
+
         </div>
       </div>
     </div>

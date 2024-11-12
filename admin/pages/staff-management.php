@@ -627,9 +627,16 @@ include '../components/header.php';
 <!--Update Password-->
 <script>
     $(document).ready(function () {
+        // Capture staff_id when the Update button is clicked and store it in the hidden field
+        $(document).on('click', '.btn-info', function () {
+            const staffId = $(this).attr('update-data-id');
+            console.log("staffId:", staffId); // Debugging line to verify staffId
+            $('.staff-id').val(staffId); // Set the hidden field with staff_id
+        });
+
         // Event listener for the "Save" button in the Update Password form
         $('.edit-password-btn').on('click', function () {
-            const staffId = $('.btn-info').attr('update-data-id'); // Get staff_id from the button attribute
+            const staffId = $('.staff-id').val(); // Get staff_id from hidden input
             const newPassword = $('#new-password').val();
             const confirmPassword = $('#confirm-password').val();
 
@@ -648,10 +655,12 @@ include '../components/header.php';
                     new_password: newPassword
                 },
                 success: function (response) {
+                    console.log("staffId in success:", staffId); // Debugging line to verify staffId
                     if (response === 'success') {
                         toastr.success("Password updated successfully.", "Success");
                         $('#edit-staff-modal').modal('hide');
                     } else {
+                        console.log("Error response:", response); // Log error response for debugging
                         toastr.error("Failed to update password.");
                     }
                 },
@@ -661,6 +670,7 @@ include '../components/header.php';
             });
         });
     });
+
 </script>
 
 
