@@ -8,7 +8,8 @@ $query = "
     SELECT s.*, 
            r.destination_from, 
            b.bus_number,
-           bt.bus_type
+           bt.bus_type,
+           s.rest_day
     FROM tblstaff s
     LEFT JOIN tblroutefrom r ON s.terminal = r.from_id
     LEFT JOIN tblbus b ON s.bus_number = b.bus_id

@@ -418,19 +418,40 @@ include '../components/header.php';
                     data.forEach(function (staff) {
                         // Create a base card template
                         var card = `
-                        <div class="col-md-6 col-sm-6 mb-4">
+                        <div class="col-md-4 col-sm-4 mb-4">
                             <div class="card">
                                 <div class="card-body text-center">
-                                    <div>
-                                        <h3 class="staff-name">${staff.firstname} ${staff.lastname}</h3>
-                                        <p class="staff-role">${staff.role}</p>
-                                        <p class="email">${staff.email}</p>
-                                        <h6 class="terminal mt-3">${staff.destination_from} Terminal</h6>
-                                        ${staff.role === 'Driver' || staff.role === 'Conductor' ? `<h6 class="bus-number">Bus #: ${staff.bus_number}</h6>
-                                        <h6 class="bus-type">${staff.bus_type}</h6>` : ''}
+                                    <!-- Profile Header -->
+                                    <div class="profile-header mb-3">
+                                        <h3 class="staff-name font-weight-bold">${staff.firstname} ${staff.lastname}</h3>
+                                        <p class="staff-role text-muted mb-2">${staff.role}</p>
+                                        <p class="email text-muted">${staff.email}</p>
                                     </div>
-                                    <button class="btn btn-info btn-sm mt-3 mb-4 text-light" update-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#edit-staff-modal">Update</button>
-                                    <button class="btn btn-danger btn-sm mt-3 mb-4 text-light" delete-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#delete-staff-modal">Delete</button>
+
+                                    <!-- Terminal Info -->
+                                    <div class="terminal-info mb-3">
+                                        <h6 class="terminal font-weight-bold text-primary">${staff.destination_from} Terminal</h6>
+                                    </div>
+
+                                    <!-- Conditional Bus Details for Drivers and Conductors -->
+                                    ${staff.role === 'Driver' || staff.role === 'Conductor' ? `
+                                    <div class="bus-details row mt-3">
+                                        <div class="col-6">
+                                            <h6 class="bus-number font-weight-bold">Bus #: ${staff.bus_number}</h6>
+                                        </div>
+                                        <div class="col-6">
+                                            <h6 class="bus-type font-weight-bold">${staff.bus_type}</h6>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <h6 class="rest-day text-warning">Rest Day: ${staff.rest_day}</h6>
+                                        </div>
+                                    </div>` : ''}
+
+                                    <!-- Action Buttons -->
+                                    <div class="action-buttons mt-4">
+                                        <button class="btn btn-info btn-sm text-light mr-2" update-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#edit-staff-modal">Update</button>
+                                        <button class="btn btn-danger btn-sm text-light" delete-data-id="${staff.staff_id}" data-bs-toggle="modal" data-bs-target="#delete-staff-modal">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
