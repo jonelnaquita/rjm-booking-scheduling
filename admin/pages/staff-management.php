@@ -426,6 +426,7 @@ include '../components/header.php';
                                         <h3 class="staff-name font-weight-bold">${staff.firstname} ${staff.lastname}</h3>
                                         <p class="staff-role text-muted mb-2">${staff.role}</p>
                                         <p class="email text-muted">${staff.email}</p>
+                                        <p class="email text-muted" style="margin-top: -10px;">${staff.mobile_number}</p>
                                     </div>
 
                                     <!-- Terminal Info -->
