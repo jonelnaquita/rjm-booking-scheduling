@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Fetch passenger email
         $email = $booking_details['email'];
+        $ticket_number = random_int(100000, 999999);
 
         // Load the e-ticket content
         ob_start();
@@ -76,8 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail = new PHPMailer(true);
 
         try {
-            $ticket_number = random_int(100000, 999999);
-
             // Update booking status to "Confirmed" and set the ticket_number
             $update_query = "UPDATE tblbooking SET status = 'Confirmed', ticket_number = ? WHERE book_id = ?";
             $update_stmt = $conn->prepare($update_query);
