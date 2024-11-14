@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $email_body = ob_get_clean();
 
                 // Replace placeholders in the template
-                $resetLink = "http://localhost/rjm-booking-scheduling/staff/pages/reset-password.php?token=" . $token;
+                $resetLink = "https://rjmtransportcorp.site/staff/pages/reset-password.php?token=" . $token;
                 $email_body = str_replace(['{{name}}', '{{action_url}}'], [$firstname, $resetLink], $email_body);
 
                 // Email content
