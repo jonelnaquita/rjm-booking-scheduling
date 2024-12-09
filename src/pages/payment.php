@@ -102,6 +102,10 @@ include '../api/fetch-arrival-details.php';
                 value="<?php echo htmlspecialchars($passengerDetails['middleName']); ?>" placeholder="Middle Name">
             <input type="hidden" name="lastName" value="<?php echo htmlspecialchars($passengerDetails['lastName']); ?>"
                 placeholder="Last Name">
+            <input type="hidden" name="gender" value="<?php echo htmlspecialchars($passengerDetails['gender']); ?>"
+                placeholder="Gender">
+            <input type="hidden" name="province" value="<?php echo htmlspecialchars($passengerDetails['province']); ?>"
+                placeholder="Province">
             <input type="hidden" name="city" value="<?php echo htmlspecialchars($passengerDetails['city']); ?>"
                 placeholder="City">
             <input type="hidden" name="email" value="<?php echo htmlspecialchars($passengerDetails['email']); ?>"

@@ -14,6 +14,8 @@ try {
     $firstName = $_POST['firstName'];
     $middleName = $_POST['middleName'];
     $lastName = $_POST['lastName'];
+    $gender = $_POST['gender'];
+    $province = $_POST['province'];
     $city = $_POST['city'];
     $email = $_POST['email'];
     $mobile_number = $_POST['mobile'];
@@ -68,10 +70,10 @@ try {
     }
 
     // Insert into tblpassenger
-    $sqlPassenger = "INSERT INTO tblpassenger (passenger_code, firstname, middlename, lastname, city, email, mobile_number, full_address) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sqlPassenger = "INSERT INTO tblpassenger (passenger_code, firstname, middlename, lastname, gender, province, city, email, mobile_number, full_address) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmtPassenger = $conn->prepare($sqlPassenger);
-    $stmtPassenger->bind_param("ssssssss", $passenger_id, $firstName, $middleName, $lastName, $city, $email, $mobile_number, $fullAddress);
+    $stmtPassenger->bind_param("ssssssssss", $passenger_id, $firstName, $middleName, $lastName, $gender, $province, $city, $email, $mobile_number, $fullAddress);
 
     if (!$stmtPassenger->execute()) {
         throw new Exception("Error saving passenger data: " . $stmtPassenger->error);

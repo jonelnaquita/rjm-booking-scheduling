@@ -22,12 +22,15 @@ include '../api/store-schedule.php';
         <form id="passengerForm" method="POST" action="../api/store-passenger-details.php">
             <div class="row mt-4">
                 <div class="col-md-6">
+                    <!-- First Name -->
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" class="form-control form-line"
                             placeholder="Juan" maxlength="25">
                         <small class="error-message" style="color: red; display: none;">First Name is required.</small>
                     </div>
+
+                    <!-- Middle Name -->
                     <div class="form-group">
                         <label for="middleName">Middle Name</label>
                         <input type="text" id="middleName" name="middleName" class="form-control form-line"
@@ -35,21 +38,48 @@ include '../api/store-schedule.php';
                         <small class="error-message" style="color: red; display: none;">Middle Name must be exactly 1
                             character.</small>
                     </div>
+
+                    <!-- Last Name -->
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <input type="text" id="lastName" name="lastName" class="form-control form-line"
                             placeholder="Dela Cruz" maxlength="25">
                         <small class="error-message" style="color: red; display: none;">Last Name is required.</small>
                     </div>
+
+                    <!-- Gender -->
                     <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" name="city" class="form-control form-line"
-                            placeholder="Enter your city">
-                        <small class="error-message" style="color: red; display: none;">City is required.</small>
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" class="form-control form-line">
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Preferred not to say">Preferred not to say</option>
+                        </select>
+                        <small class="error-message" style="color: red; display: none;">Gender is required.</small>
                     </div>
                 </div>
 
                 <div class="col-md-6">
+                    <!-- Province -->
+                    <div class="form-group">
+                        <label for="province">Province</label>
+                        <select id="province" name="province" class="form-control form-line">
+                            <option value="" disabled selected>Select Province</option>
+                        </select>
+                        <small class="error-message" style="color: red; display: none;">Province is required.</small>
+                    </div>
+
+                    <!-- City -->
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <select id="city-selected" name="city-selected" class="form-control form-line">
+                            <option value="" disabled selected>Select City</option>
+                        </select>
+                        <small class="error-message" style="color: red; display: none;">City is required.</small>
+                    </div>
+
+                    <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" class="form-control form-line"
@@ -57,6 +87,8 @@ include '../api/store-schedule.php';
                         <small class="error-message" style="color: red; display: none;">A valid email is
                             required.</small>
                     </div>
+
+                    <!-- Mobile Number -->
                     <div class="form-group">
                         <label for="mobile">Mobile Number</label>
                         <input type="text" id="mobile" name="mobile" class="form-control form-line"
@@ -64,6 +96,8 @@ include '../api/store-schedule.php';
                         <small class="error-message" style="color: red; display: none;">Mobile Number is
                             required.</small>
                     </div>
+
+                    <!-- Full Address -->
                     <div class="form-group">
                         <label for="fullAddress">Full Address</label>
                         <input type="text" id="fullAddress" name="fullAddress" class="form-control form-line"
@@ -85,12 +119,61 @@ include '../api/store-schedule.php';
             </div>
         </form>
 
+
     </div>
 
     <?php
     include '../components/footer.php'
         ?>
 </body>
+
+<script>
+    $(document).ready(function () {
+        // Populate the provinces dropdown on page load
+        $.ajax({
+            url: "https://psgc.gitlab.io/api/provinces/",
+            type: "GET",
+            success: function (data) {
+                var options = JSON.parse(data); // Assuming data is already in JSON format
+                var dropdown = $("#province");
+
+                // Populate provinces dropdown
+                $.each(options, function (index, value) {
+                    dropdown.append("<option value='" + value.code + "'>" + value.name + "</option>");
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+
+        // When a province is selected, populate the cities dropdown
+        $("#province").change(function () {
+            var provinceCode = $(this).val();
+            var citiesDropdown = $("#city-selected");
+
+            if (!provinceCode) return;
+
+            $.ajax({
+                url: "https://psgc.gitlab.io/api/provinces/" + provinceCode + "/cities-municipalities/",
+                type: "GET",
+                success: function (data) {
+                    var cities_options = JSON.parse(data); // Assuming data is already in JSON format
+
+                    // Populate cities dropdown
+                    $.each(cities_options, function (index, value) {
+                        citiesDropdown.append("<option value='" + value.name + "'>" + value.name + "</option>");
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Error:', errorThrown);
+                }
+            });
+        });
+    });
+</script>
+
+
 
 <script>
     $(document).ready(function () {

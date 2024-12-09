@@ -8,7 +8,8 @@ $_SESSION['booking'] = [
     'destination_to' => $_POST['destination-to'],
     'date_departure' => $_POST['date-departure'],
     'date_arrival' => $_POST['date-arrival'],
-    'passenger' => $_POST['passenger']
+    'passenger' => $_POST['passenger'],
+    'bus_type' => $_POST['bus-type']
 ];
 
 // Redirect to the schedules page

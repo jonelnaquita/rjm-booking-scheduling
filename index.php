@@ -60,6 +60,18 @@ include 'components/header.php'
                       required> Round-Trip</label>
                 </div>
               </div>
+              <div class="row mb-2">
+                <div class="col-md">
+                  <div class="form-group">
+                    <label for="id_label_single">Bus Type</label>
+                    <label for="id_label_single" style="width: 100%;">
+                      <select class="js-example-basic-single3 js-states form-control bus-type" id="id_label_single3"
+                        name="bus-type" style="width: 100%;" required>
+                        <!-- Options will be dynamically added here -->
+                      </select>
+                  </div>
+                </div>
+              </div>
               <div class="row mb-3">
                 <div class="col-md">
                   <div class="form-group">
@@ -240,6 +252,7 @@ include 'components/header.php'
   });
 </script>
 
+
 <!--Enable or Disable Arrival Date-->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -334,130 +347,148 @@ include 'components/header.php'
   });
 </script>
 
+<!--Fetch Bus Type-->
+<script>
+  $(document).ready(function () {
+    // Fetch bus types when the page loads
+    $.ajax({
+      url: 'src/api/fetch-bus-type.php', // Adjust the path as needed
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        if (data.length > 0) {
+          // Populate the select element
+          var options = '<option value="" disabled selected>Select Bus Type</option>';
+          data.forEach(function (item) {
+            options += `<option value="${item.bustype_id}">${item.bus_type}</option>`;
+          });
+          $('.bus-type').html(options);
+        } else {
+          $('.bus-type').html('<option value="" disabled>No Bus Types Available</option>');
+        }
+      },
+      error: function () {
+        console.error('Error fetching bus types');
+        $('.bus-type').html('<option value="" disabled>Error Fetching Bus Types</option>');
+      }
+    });
+
+    // Initialize Select2 on the bus type dropdown
+    $('.bus-type').select2({
+      placeholder: "Select Bus Type",
+      allowClear: true
+    });
+  });
+</script>
 
 
 <!--Fetch Departure Available Dates-->
 <script>
   $(document).ready(function () {
-    // Trigger when both From and To fields are selected
-    $('.destination-from, .destination-to').on('change', function () {
+    $('.destination-from, .destination-to, .bus-type').on('change', function () {
       var from = $('.destination-from').val();
       var to = $('.destination-to').val();
+      var busType = $('.bus-type').val();
 
-      if (from && to) {
+      if (from && to && busType) {
         $.ajax({
-          url: 'src/api/fetch-dates-enable.php', // Your API endpoint to fetch dates
+          url: 'src/api/fetch-dates-enable.php',
           type: 'POST',
           data: {
             destination_from: from,
-            destination_to: to
+            destination_to: to,
+            bus_type: busType
           },
           dataType: 'json',
           success: function (response) {
             if (response.success) {
               var availableDates = response.dates.map(function (date) {
-                // Convert date from yyyy-mm-dd to mm/dd/yyyy
                 var dateParts = date.split("-");
                 return dateParts[1] + '/' + dateParts[2] + '/' + dateParts[0];
               });
 
-              console.log('Available Dates:', availableDates); // Log available dates for debugging
+              console.log('Departure Dates:', availableDates);
 
-              // Destroy any existing datepicker instance
-              $('#date-departure').datepicker('destroy');
-
-              // Reinitialize the datepicker with new available dates and highlighting
-              $('#date-departure').datepicker({
-                format: 'mm/dd/yyyy', // Match the format used in datepicker
+              $('#date-departure').datepicker('destroy').datepicker({
+                format: 'mm/dd/yyyy',
                 beforeShowDay: function (date) {
                   var formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
                     date.getDate().toString().padStart(2, '0') + '/' +
                     date.getFullYear();
 
-                  if (availableDates.indexOf(formattedDate) != -1) {
-                    // Enable date and apply a green highlight class for available dates
-                    return { enabled: true, classes: 'available-date-highlight' };
-                  } else {
-                    // Disable all other dates
-                    return { enabled: false };
-                  }
+                  return availableDates.includes(formattedDate)
+                    ? { enabled: true, classes: 'available-date-highlight' }
+                    : { enabled: false };
                 },
-                autoclose: true // Close the calendar after selecting a date
+                autoclose: true
               });
-            } else {
-              console.error('Error: No success in the response.');
             }
           },
           error: function (xhr, status, error) {
-            console.error("Error fetching dates:", error); // Log error for debugging
-            console.log(xhr.responseText); // Log server response for deeper debugging
+            console.error("Departure Error:", error);
+            console.log(xhr.responseText);
           }
         });
       }
     });
   });
+
 </script>
+
 
 <!--Fetch Arrival Available Dates-->
 <script>
   $(document).ready(function () {
-    // Trigger when both From and To fields are selected
-    $('.destination-from, .destination-to').on('change', function () {
+    $('.destination-from, .destination-to, .bus-type').on('change', function () {
       var from = $('.destination-from').val();
       var to = $('.destination-to').val();
+      var busType = $('.bus-type').val(); // Fetch the selected bus type
 
-      if (from && to) {
+      if (from && to && busType) {
         $.ajax({
-          url: 'src/api/fetch-dates-enable.php', // Your API endpoint to fetch dates
+          url: 'src/api/fetch-dates-enable.php',
           type: 'POST',
           data: {
-            destination_from: to,
-            destination_to: from
+            destination_from: to, // Reverse for arrival
+            destination_to: from,
+            bus_type: busType
           },
           dataType: 'json',
           success: function (response) {
             if (response.success) {
               var availableDates = response.dates.map(function (date) {
-                // Convert date from yyyy-mm-dd to mm/dd/yyyy
                 var dateParts = date.split("-");
                 return dateParts[1] + '/' + dateParts[2] + '/' + dateParts[0];
               });
 
-              console.log('Available Dates:', availableDates); // Log available dates for debugging
+              console.log('Arrival Dates:', availableDates);
 
-              // Destroy any existing datepicker instance
-              $('#date-arrival').datepicker('destroy');
-
-              // Reinitialize the datepicker with new available dates and highlighting
-              $('#date-arrival').datepicker({
-                format: 'mm/dd/yyyy', // Match the format used in datepicker
+              $('#date-arrival').datepicker('destroy').datepicker({
+                format: 'mm/dd/yyyy',
                 beforeShowDay: function (date) {
                   var formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
                     date.getDate().toString().padStart(2, '0') + '/' +
                     date.getFullYear();
 
-                  if (availableDates.indexOf(formattedDate) != -1) {
-                    // Enable date and apply a green highlight class for available dates
-                    return { enabled: true, classes: 'available-date-highlight' };
-                  } else {
-                    // Disable all other dates
-                    return { enabled: false };
-                  }
+                  return availableDates.includes(formattedDate)
+                    ? { enabled: true, classes: 'available-date-highlight' }
+                    : { enabled: false };
                 },
-                autoclose: true // Close the calendar after selecting a date
+                autoclose: true
               });
             } else {
               console.error('Error: No success in the response.');
             }
           },
           error: function (xhr, status, error) {
-            console.error("Error fetching dates:", error); // Log error for debugging
-            console.log(xhr.responseText); // Log server response for deeper debugging
+            console.error("Arrival Error:", error);
+            console.log(xhr.responseText);
           }
         });
       }
     });
   });
 </script>
+
 
 </html>
