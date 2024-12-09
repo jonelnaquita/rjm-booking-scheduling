@@ -18,13 +18,13 @@ $query = "
         trf.destination_from AS trip_to
     FROM 
         tblschedule s
-    JOIN 
+    LEFT JOIN 
         tblroutefrom rf ON s.destination_from = rf.from_id
-    JOIN 
+    LEFT JOIN 
         tblroutefrom trf ON s.destination_to = trf.from_id
-    JOIN 
+    LEFT JOIN 
         tblbus b ON s.bus_id = b.bus_id
-    JOIN 
+    LEFT JOIN 
         tblbustype bt ON b.bus_type = bt.bustype_id
     WHERE
         s.sched_status = ''
@@ -45,11 +45,13 @@ if (mysqli_num_rows($result) > 0) {
     // Check for duplicates based on departure_date, departure_time, and bus_number
     foreach ($schedules as $key => $schedule) {
         foreach ($schedules as $compare_key => $compare_schedule) {
-            if ($key != $compare_key && 
-                $schedule['departure_date'] === $compare_schedule['departure_date'] && 
-                $schedule['departure_time'] === $compare_schedule['departure_time'] && 
-                $schedule['bus_number'] === $compare_schedule['bus_number']) {
-                    
+            if (
+                $key != $compare_key &&
+                $schedule['departure_date'] === $compare_schedule['departure_date'] &&
+                $schedule['departure_time'] === $compare_schedule['departure_time'] &&
+                $schedule['bus_number'] === $compare_schedule['bus_number']
+            ) {
+
                 // Mark both schedules as duplicates
                 $duplicate_entries[$key] = true;
                 $duplicate_entries[$compare_key] = true;
@@ -62,7 +64,7 @@ if (mysqli_num_rows($result) > 0) {
     foreach ($schedules as $key => $row) {
         // Highlight duplicates in red
         $row_class = isset($duplicate_entries[$key]) ? "table-danger" : "";
-        
+
         echo "<tr class='" . $row_class . "'>";
         echo "<td>" . $counter . "</td>";
         echo "<td> <label class='badge badge-info'>" . htmlspecialchars($row['destination_from']) . "</label> to <label class='badge badge-danger'>" . htmlspecialchars($row['trip_to']) . "</label></td>";
@@ -70,7 +72,7 @@ if (mysqli_num_rows($result) > 0) {
         echo "<td>" . date('h:i A', strtotime($row['departure_time'])) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_number']) . "</td>";
         echo "<td>" . htmlspecialchars($row['bus_type']) . "</td>";
-        echo "<td> ₱" . htmlspecialchars($row['fare']) . "</td>"; 
+        echo "<td> ₱" . htmlspecialchars($row['fare']) . "</td>";
         // echo "<td> <label class='badge badge-success'>" . htmlspecialchars($row['status']) . "</label></td>";
         echo "<td>
                 <div class='action'>

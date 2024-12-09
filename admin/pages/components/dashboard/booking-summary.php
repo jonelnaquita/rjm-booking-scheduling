@@ -59,7 +59,7 @@
             <div class="col-md-3 mb-4 stretch-card transparent">
                 <div class="card card-light-danger">
                     <div class="card-body">
-                        <p class="mb-4">Total Revenue</p>
+                        <p class="mb-4">Gross Income</p>
                         <p class="fs-30 mb-2 total-revenue"></p>
                     </div>
                 </div>

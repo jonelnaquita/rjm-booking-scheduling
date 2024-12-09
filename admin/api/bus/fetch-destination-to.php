@@ -8,7 +8,7 @@ if (isset($_POST['from_id'])) {
     $query = "SELECT rt.to_id, rt.destination_to, rf.from_id, rf.destination_from 
               FROM tblrouteto rt 
               JOIN tblroutefrom rf ON rt.from_id = rf.from_id 
-              WHERE rt.destination_to = ?";
+              WHERE rt.destination_to = ?"; // Filter by from_id instead of destination_to
 
     if ($stmt = $conn->prepare($query)) {
         $stmt->bind_param("i", $from_id);

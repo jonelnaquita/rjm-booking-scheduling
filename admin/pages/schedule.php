@@ -222,80 +222,6 @@ include '../components/header.php';
     });
 </script>
 
-
-<!--Fetch Destination From-->
-<script>
-    $(document).ready(function () {
-        $('.destination-from').select2({
-            dropdownParent: $('#schedule-modal'),
-            width: '100%' // Ensure full width
-        });
-
-        $.ajax({
-            url: '../api/schedule/fetch-destination-from.php',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                var select = $('.destination-from');
-
-                // Add a default empty option
-                select.append('<option value="" selected disabled>Select Destination From</option>');
-
-                $.each(data, function (index, destination) {
-                    select.append('<option value="' + destination.from_id + '">' + destination.destination_from + '</option>');
-                });
-            },
-            error: function () {
-                console.error('Error fetching destinations');
-            }
-        });
-    });
-</script>
-
-
-<script>
-    $(document).ready(function () {
-
-        $('.destination-to').select2({
-            dropdownParent: $('#schedule-modal'),
-            width: '100%' // Ensure full width
-        });
-
-        // Event listener for when destination-from dropdown value changes
-        $('.destination-from').on('change', function () {
-            var from_id = $(this).val();
-
-            // Check if from_id is valid
-            if (from_id) {
-                $.ajax({
-                    url: '../api/schedule/fetch-destination-to.php',
-                    type: 'POST',
-                    data: { from_id: from_id },
-                    dataType: 'json',
-                    success: function (data) {
-                        var select = $('.destination-to');
-                        select.empty(); // Clear existing options
-
-                        // Add a default empty option
-                        select.append('<option value="" selected disabled>Select Destination To</option>');
-
-                        $.each(data, function (index, destination) {
-                            select.append('<option value="' + destination.from_id + '">' + destination.destination_from + '</option>');
-                        });
-                        select.trigger('change'); // Update Select2
-                    },
-                    error: function () {
-                        console.error('Error fetching destinations');
-                    }
-                });
-            } else {
-                $('.destination-to').empty().trigger('change'); // Clear the dropdown if no from_id
-            }
-        });
-    });
-</script>
-
-
 <!-- Fetch Bus Number -->
 <script>
     $(document).ready(function () {
@@ -326,7 +252,35 @@ include '../components/header.php';
                 console.error('Error fetching bus numbers');
             }
         });
+
+        // Event handler for when a bus is selected
+        $('.bus-number').on('change', function () {
+            var busId = $(this).val(); // Get selected bus ID
+            if (busId) {
+                // Fetch bus details based on selected bus ID
+                $.ajax({
+                    url: '../api/schedule/get-bus-details.php', // Path to fetch bus details
+                    type: 'GET',
+                    data: { bus_id: busId },
+                    dataType: 'json',
+                    success: function (busDetails) {
+                        if (busDetails) {
+                            // Update the destination-from input with terminal_id
+                            $('.destination-from').val(busDetails.terminal_id);
+                            // Update the destination-to input with destination_id
+                            $('.destination-to').val(busDetails.destination_id);
+                        } else {
+                            console.error("No details found for the selected bus");
+                        }
+                    },
+                    error: function () {
+                        console.error('Error fetching bus details');
+                    }
+                });
+            }
+        });
     });
+
 </script>
 
 <!--Save Schedule -->
@@ -629,9 +583,11 @@ include '../components/header.php';
         var departure_date = $('#schedule-datepicker').val();
         var departure_time = $('#schedule-timepicker').val();
         var fare = $('.fare').val();
+        var destination_from = $('.destination-from').val(); // Get destination-from value
+        var destination_to = $('.destination-to').val(); // Get destination-to value
 
         // Validate form data (optional)
-        if (!bus_id || !departure_date || !departure_time || !fare) {
+        if (!bus_id || !departure_date || !departure_time || !fare || !destination_from || !destination_to) {
             alert('Please fill all fields.');
             return; // Exit the function if validation fails
         }
@@ -645,7 +601,9 @@ include '../components/header.php';
                 bus_id: bus_id,
                 departure_date: departure_date,
                 departure_time: departure_time,
-                fare: fare
+                fare: fare,
+                destination_from: destination_from, // Include destination-from
+                destination_to: destination_to // Include destination-to
             },
             dataType: 'json', // Expect a JSON response
             success: function (response) {
@@ -662,6 +620,7 @@ include '../components/header.php';
             }
         });
     });
+
 </script>
 
 

@@ -287,12 +287,14 @@ include '../components/header.php';
             });
         });
 
-        // Enable "Add" button when both fields have values
-        $('input[name="bus-number"], #bus-type-id').on('change input', function () {
+        $('input[name="bus-number"], #bus-type-id, .terminal_id, .destination-to, input[name="bus-seats"]').on('change input', function () {
             let busNumber = $('input[name="bus-number"]').val().trim();
             let busTypeId = $('#bus-type-id').val();
+            let terminalId = $('.terminal_id').val();
+            let destinationId = $('.destination-to').val();
+            let busSeats = $('input[name="bus-seats"]').val().trim();
 
-            if (busNumber !== "" && busTypeId !== null) {
+            if (busNumber !== "" && busTypeId !== null && terminalId !== null && destinationId !== null && busSeats !== "") {
                 $('.add-new-bus').prop('disabled', false);
             } else {
                 $('.add-new-bus').prop('disabled', true);
@@ -303,6 +305,8 @@ include '../components/header.php';
         $('.add-new-bus').on('click', function () {
             let busNumber = $('input[name="bus-number"]').val().trim();
             let busTypeId = $('#bus-type-id').val();
+            let terminalId = $('.terminal_id').val();
+            let destinationId = $('.destination-to').val();
             let busSeats = $('input[name="bus-seats"]').val().trim();
 
             // Send the new bus data to the server via AJAX
@@ -312,6 +316,8 @@ include '../components/header.php';
                 data: {
                     bus_number: busNumber,
                     bustype_id: busTypeId,
+                    terminal_id: terminalId,
+                    destination_id: destinationId,
                     seats: busSeats
                 },
                 success: function (response) {
@@ -339,47 +345,107 @@ include '../components/header.php';
         $(document).on('click', '.edit-button', function () {
             var busId = $(this).data('id'); // Get the bus ID from the button's data-id attribute
 
-            // Set the bus ID as a data attribute on the modal for later use
-            $('#update-bus').data('bus-id', busId);
+            $('#update-bus').data('bus-id', busId); // Store bus ID in modal
 
-            // Fetch bus details and bus types via AJAX
+            // Fetch bus details
             $.ajax({
                 url: '../api/bus/fetch-bus-details.php',
                 method: 'GET',
-                data: { bus_id: busId }, // Send bus ID to the server
+                data: { bus_id: busId },
                 success: function (response) {
                     const busData = JSON.parse(response);
 
-                    // Populate the form fields with the fetched bus details
+                    // Populate form fields
                     $('input[name="update-bus-number"]').val(busData.bus_number);
                     $('input[name="update-bus-seats"]').val(busData.seats);
 
-                    // Fetch bus types and populate the select dropdown
+                    // Populate Bus Type dropdown
                     $.ajax({
                         url: '../api/bus/fetch-bus-type.php',
                         method: 'GET',
                         success: function (busTypeResponse) {
                             const busTypes = JSON.parse(busTypeResponse);
-                            let options = '<option value="" disabled>Select Bus Type</option>';
+                            let busTypeOptions = '<option value="" disabled>Select Bus Type</option>';
 
-                            // Loop through bus types and set the correct one as selected
                             busTypes.forEach(function (busType) {
-                                options += `<option value="${busType.bustype_id}" ${busData.bus_type == busType.bustype_id ? 'selected' : ''}>${busType.bus_type}</option>`;
+                                busTypeOptions += `<option value="${busType.bustype_id}" ${busData.bus_type == busType.bustype_id ? 'selected' : ''}>${busType.bus_type}</option>`;
                             });
 
-                            $('#bus-type-update').html(options);
+                            $('#bus-type-update').html(busTypeOptions).trigger('change');
                         }
                     });
+
+                    // Terminal Dropdown
+                    $.ajax({
+                        url: '../api/schedule/fetch-destination-from.php',
+                        method: 'GET',
+                        success: function (terminalResponse) {
+                            const terminals = typeof terminalResponse === "string" ? JSON.parse(terminalResponse) : terminalResponse;
+
+                            let terminalOptions = '<option value="" disabled>Select Destination From</option>';
+                            if (Array.isArray(terminals)) {
+                                terminals.forEach(function (terminal) {
+                                    terminalOptions += `<option value="${terminal.from_id}" ${busData.terminal_id == terminal.from_id ? 'selected' : ''}>${terminal.destination_from}</option>`;
+                                });
+                            } else {
+                                console.error("Invalid terminals data", terminals);
+                            }
+
+                            $('.update_terminal_id').html(terminalOptions).trigger('change');
+                        }
+                    });
+
+                    $.ajax({
+                        url: '../api/bus/fetch-destination-to.php',
+                        method: 'POST',
+                        data: { from_id: busData.terminal_id }, // Pass `from_id` to the backend
+                        success: function (destinationResponse) {
+                            console.log("Destination Response: ", destinationResponse);
+
+                            // Parse the response
+                            const destinations = typeof destinationResponse === "string" ? JSON.parse(destinationResponse) : destinationResponse;
+
+                            // Default placeholder option using busData.terminal_id
+                            let destinationOptions = '<option value="" disabled>Select Destination To</option>';
+
+                            if (Array.isArray(destinations)) {
+                                destinations.forEach(function (destination) {
+                                    destinationOptions += `
+                    <option value="${destination.from_id}" ${busData.destination_id == destination.to_id ? 'selected' : ''}>
+                        ${destination.destination_from} <!-- Display destination_from here -->
+                    </option>`;
+                                });
+                            } else {
+                                console.error("Invalid destinations data", destinations);
+                            }
+
+                            // Populate the dropdown with options
+                            $('.update-destination-to').html(destinationOptions).trigger('change');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching destinations:", status, error, xhr.responseText);
+                        }
+                    });
+
+
+
+
+                },
+                error: function () {
+                    toastr.error('Error fetching bus details.');
                 }
             });
         });
 
 
+
         // Handle bus update submission
         $('.update-bus-btn').on('click', function () {
-            let busId = $('#update-bus').data('bus-id'); // Get bus ID stored in modal
+            let busId = $('#update-bus').data('bus-id');
             let busNumber = $('input[name="update-bus-number"]').val().trim();
             let busTypeId = $('#bus-type-update').val();
+            let terminalId = $('.update_terminal_id').val();
+            let destinationId = $('.update-destination-to').val();
             let busSeats = $('input[name="update-bus-seats"]').val().trim();
 
             $.ajax({
@@ -389,6 +455,8 @@ include '../components/header.php';
                     bus_id: busId,
                     bus_number: busNumber,
                     bus_type_id: busTypeId,
+                    terminal_id: terminalId,
+                    destination_id: destinationId,
                     seats: busSeats
                 },
                 success: function (response) {
@@ -408,6 +476,7 @@ include '../components/header.php';
                 }
             });
         });
+
     });
 </script>
 
