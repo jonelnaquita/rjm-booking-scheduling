@@ -37,7 +37,8 @@ include '../components/header.php';
 
 
                             <div class="row">
-                                <div class="col-md-12 grid-margin stretch-card">
+                                <!-- Passenger Segmentation (Half Row) -->
+                                <div class="col-md-6 grid-margin stretch-card">
                                     <div class="card position-relative">
                                         <div class="card-body">
                                             <div id="detailedReports"
@@ -45,30 +46,31 @@ include '../components/header.php';
                                                 data-bs-ride="carousel">
                                                 <div class="carousel-inner">
                                                     <div class="carousel-item active">
-                                                        <div class="row">
-                                                            <div
-                                                                class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                                                                <div class="ml-xl-4 mt-3">
-                                                                    <p class="card-title">Passenger Segmentation</p>
-                                                                    <p class="mb-2 mb-xl-0 card-description">This shows
-                                                                        the booking details for each terminal,
-                                                                        highlighting the total number of bookings per
-                                                                        location. It also provides a breakdown of
-                                                                        booking statuses, including the number of
-                                                                        pending, confirmed, and canceled bookings,
-                                                                        giving a clear view of booking trends and
-                                                                        operational efficiency across terminals.</p>
-                                                                </div>
+                                                        <div class="d-flex flex-column justify-content-start">
+                                                            <div class="ml-xl-4 mt-3">
+                                                                <p class="card-title">Passenger Segmentation</p>
+                                                                <p class="mb-2 mb-xl-0 card-description">
+                                                                    This shows the booking details for each terminal,
+                                                                    highlighting the total number of bookings per
+                                                                    location.
+                                                                    It also provides a breakdown of booking statuses,
+                                                                    including
+                                                                    the number of pending, confirmed, and canceled
+                                                                    bookings,
+                                                                    giving a clear view of booking trends and
+                                                                    operational efficiency
+                                                                    across terminals.
+                                                                </p>
                                                             </div>
-                                                            <div class="col-md-12 col-xl-9">
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
                                                                 <div class="row">
-                                                                    <div class="col-md-6 border-right">
+                                                                    <div class="col border-right">
                                                                         <div class="table-responsive mb-3 mb-md-0 mt-3">
                                                                             <?php include 'components/dashboard/booking-terminal-chart.php' ?>
                                                                         </div>
                                                                     </div>
-
-                                                                    <?php include 'components/dashboard/booking-status-chart.php' ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -79,7 +81,54 @@ include '../components/header.php';
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Bookings Per Status (2x2 Cards) -->
+                                <div class="col-md-6 grid-margin stretch-card">
+                                    <div class="row">
+                                        <!-- First Card -->
+
+                                        <!-- Gender-Wise Confirmed Bookings -->
+                                        <div class="col-md-6 grid-margin stretch-card">
+                                            <div class="card position-relative">
+                                                <div class="card-body text-center">
+                                                    <p class="card-title">Confirmed Bookings Based on Gender</p>
+                                                    <div class="mt-3">
+                                                        <?php include 'components/dashboard/booking-gender.php' ?>
+                                                        <div class="doughnutchart-wrapper">
+                                                            <canvas id="booking-gender-chart" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- City-Wise Confirmed Bookings -->
+                                        <div class="col-md-6 grid-margin stretch-card">
+                                            <div class="card position-relative">
+                                                <div class="card-body text-center">
+                                                    <p class="card-title">Confirmed Bookings Based on Passenger City</p>
+                                                    <div class="mt-3">
+                                                        <?php include 'components/dashboard/booking-city.php' ?>
+                                                        <div class="doughnutchart-wrapper">
+                                                            <canvas id="booking-city-chart" height="100"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 grid-margin stretch-card">
+                                            <div class="card position-relative">
+                                                <div class="card-body text-center">
+                                                    <p class="card-title">Bookings Per Status</p>
+                                                    <?php include 'components/dashboard/booking-status-chart.php' ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

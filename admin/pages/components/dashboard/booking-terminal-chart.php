@@ -1,16 +1,17 @@
 <?php
 include '../../models/conn.php'; // Include your database connection
 
-// SQL query to fetch bookings count per terminal
+// SQL query to fetch bookings count per terminal and per destination
 $query = "
     SELECT 
-        rf.destination_from, 
-        COUNT(b.book_id) AS booking_count
+        rf.destination_from AS terminal_name, 
+        COUNT(CASE WHEN b.scheduleDeparture_id = s.schedule_id THEN b.book_id END) AS departure_count,
+        COUNT(CASE WHEN b.scheduleArrival_id = s.schedule_id THEN b.book_id END) AS arrival_count
     FROM 
         tblbooking b
-    JOIN 
+    LEFT JOIN 
         tblschedule s ON b.scheduleDeparture_id = s.schedule_id OR b.scheduleArrival_id = s.schedule_id
-    JOIN 
+    LEFT JOIN 
         tblroutefrom rf ON s.destination_from = rf.from_id
     WHERE status = 'Confirmed'
     GROUP BY 
@@ -19,19 +20,26 @@ $query = "
 
 $result = $conn->query($query);
 
-$totalBookings = 0;
+$totalDepartureBookings = 0;
+$totalArrivalBookings = 0;
 $terminals = [];
-$bookingCounts = [];
+$departureCounts = [];
+$arrivalCounts = [];
 
-// Calculate total bookings and prepare terminal data
+// Calculate totals and prepare terminal data
 while ($row = $result->fetch_assoc()) {
-    $terminals[] = $row['destination_from'];
-    $bookingCounts[] = $row['booking_count'];
-    $totalBookings += $row['booking_count'];
+    if ($row['departure_count'] > 0 || $row['arrival_count'] > 0) {
+        $terminals[] = $row['terminal_name'];
+        $departureCounts[] = $row['departure_count'];
+        $arrivalCounts[] = $row['arrival_count'];
+        $totalDepartureBookings += $row['departure_count'];
+        $totalArrivalBookings += $row['arrival_count'];
+    }
 }
 
 // Function to calculate the width percentage
-function calculatePercentage($count, $total) {
+function calculatePercentage($count, $total)
+{
     return ($total > 0) ? ($count / $total) * 100 : 0;
 }
 
@@ -39,26 +47,62 @@ function calculatePercentage($count, $total) {
 $conn->close();
 ?>
 
-<table class="table table-borderless report-table">
-    <tbody>
-    <?php foreach ($terminals as $index => $terminal): 
-        $count = $bookingCounts[$index];
-        $percentage = calculatePercentage($count, $totalBookings);
-        // Define colors for progress bar (can be customized)
-        $progressBarColors = ['bg-primary', 'bg-warning', 'bg-danger', 'bg-info', 'bg-success'];
-        $color = $progressBarColors[$index % count($progressBarColors)];
-    ?>
-        <tr>
-            <td class="text-muted"><?= htmlspecialchars($terminal) ?></td>
-            <td class="w-100 px-0">
-                <div class="progress progress-md mx-4">
-                    <div class="progress-bar <?= $color ?>" role="progressbar" style="width: <?= round($percentage) ?>%" aria-valuenow="<?= round($percentage) ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </td>
-            <td>
-                <h5 class="font-weight-bold mb-0"><?= htmlspecialchars($count) ?></h5>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+<?php if ($totalDepartureBookings > 0): ?>
+    <h5>Bookings per Terminal (Departures)</h5>
+    <table class="table table-borderless report-table">
+        <tbody>
+            <?php foreach ($terminals as $index => $terminal):
+                $count = $departureCounts[$index];
+                if ($count > 0):
+                    $percentage = calculatePercentage($count, $totalDepartureBookings);
+                    // Define colors for progress bar
+                    $progressBarColors = ['bg-primary', 'bg-warning', 'bg-danger', 'bg-info', 'bg-success'];
+                    $color = $progressBarColors[$index % count($progressBarColors)];
+                    ?>
+                    <tr>
+                        <td class="text-muted"><?= htmlspecialchars($terminal) ?></td>
+                        <td class="w-100 px-0">
+                            <div class="progress progress-md mx-4">
+                                <div class="progress-bar <?= $color ?>" role="progressbar" style="width: <?= round($percentage) ?>%"
+                                    aria-valuenow="<?= round($percentage) ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <h5 class="font-weight-bold mb-0"><?= htmlspecialchars($count) ?></h5>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<?php if ($totalArrivalBookings > 0): ?>
+    <h5>Bookings per Destination (Arrivals)</h5>
+    <table class="table table-borderless report-table">
+        <tbody>
+            <?php foreach ($terminals as $index => $terminal):
+                $count = $arrivalCounts[$index];
+                if ($count > 0):
+                    $percentage = calculatePercentage($count, $totalArrivalBookings);
+                    // Define colors for progress bar
+                    $progressBarColors = ['bg-primary', 'bg-warning', 'bg-danger', 'bg-info', 'bg-success'];
+                    $color = $progressBarColors[$index % count($progressBarColors)];
+                    ?>
+                    <tr>
+                        <td class="text-muted"><?= htmlspecialchars($terminal) ?></td>
+                        <td class="w-100 px-0">
+                            <div class="progress progress-md mx-4">
+                                <div class="progress-bar <?= $color ?>" role="progressbar" style="width: <?= round($percentage) ?>%"
+                                    aria-valuenow="<?= round($percentage) ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <h5 class="font-weight-bold mb-0"><?= htmlspecialchars($count) ?></h5>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

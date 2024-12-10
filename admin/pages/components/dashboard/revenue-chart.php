@@ -22,7 +22,7 @@ function generateYearRevenue($startYear = 2024, $numYears = 5)
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p class="card-title">Revenue Details</p>
+                    <p class="card-title">Gross Income Details</p>
                     <div>
                         <!-- Month selector dropdown -->
                         <select id="month-selector" class="form-select"
