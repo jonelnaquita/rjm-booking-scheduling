@@ -48,7 +48,7 @@ $conn->close();
 ?>
 
 <?php if ($totalDepartureBookings > 0): ?>
-    <h5>Bookings per Terminal (Departures)</h5>
+    <h5>Bookings per Terminal</h5>
     <table class="table table-borderless report-table">
         <tbody>
             <?php foreach ($terminals as $index => $terminal):
@@ -78,7 +78,7 @@ $conn->close();
 <?php endif; ?>
 
 <?php if ($totalArrivalBookings > 0): ?>
-    <h5>Bookings per Destination (Arrivals)</h5>
+    <h5>Bookings per Destination</h5>
     <table class="table table-borderless report-table">
         <tbody>
             <?php foreach ($terminals as $index => $terminal):

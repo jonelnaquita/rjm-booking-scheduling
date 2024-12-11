@@ -3,8 +3,8 @@ session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../vendor/autoload.php'; // Include PHPMailer and autoload dependencies
-require '../../../models/conn.php'; // Include your database connection script
+require '../../vendor/autoload.php'; // Include PHPMailer
+require '../../../models/conn.php'; // Include your database connection
 include '../../../models/env.php'; // Include environment variables
 
 header('Content-Type: application/json');
@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $booking_id = $_POST['booking_id'];
 
-    // SQL Query to fetch booking, schedule, passenger, bus, and bus type info
+    // SQL query to fetch booking details
     $query = "
         SELECT 
             b.book_id, 
@@ -63,80 +63,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         $booking_details = $result->fetch_assoc();
 
-        // Fetch passenger email
+        $passengers = $booking_details['passengers'];
         $email = $booking_details['email'];
-        $ticket_number = random_int(100000, 999999);
 
-        // Load the e-ticket content
-        ob_start();
-        include('e-ticket.php');  // Include the e-ticket template
-        $e_ticket_content = ob_get_clean();
-
-        // Initialize PHPMailer
+        // Generate and send emails for each passenger
+        $ticket_numbers = [];
         $mail = new PHPMailer(true);
 
         try {
+            for ($i = 0; $i < $passengers; $i++) {
+                // Generate a unique ticket number
+                $ticket_number = random_int(100000, 999999);
+                $ticket_numbers[] = $ticket_number;
 
-            // Update booking status to "Confirmed" and set the ticket_number
-            $update_query = "UPDATE tblbooking SET status = 'Confirmed', ticket_number = ? WHERE book_id = ?";
-            $update_stmt = $conn->prepare($update_query);
-            $update_stmt->bind_param('ii', $ticket_number, $booking_id);
-            $update_stmt->execute();
+                // Load the e-ticket content
+                ob_start();
+                include('e-ticket.php'); // Pass ticket number dynamically
+                $e_ticket_content = ob_get_clean();
 
-            // Ensure booking status was updated
-            if ($update_stmt->affected_rows > 0) {
-                // Log the action
-                if (isset($_SESSION['admin'])) {
-                    $staff_id = $_SESSION['admin'];
-                    $role = "Admin";
-                    $action = "Confirmed Booking"; // Define the action taken, e.g., "Booked ticket"
-                    $category = "Booking";
-                    $date_created = date('Y-m-d H:i:s'); // Current date and time
-
-                    $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
-                    $log_stmt = $conn->prepare($log_query);
-                    $log_stmt->bind_param('iissss', $staff_id, $booking_id, $category, $role, $action, $date_created);
-                    $log_stmt->execute();
-                }
-
-                // SMTP Configuration
+                // Configure PHPMailer
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
                 $mail->Username = $SMTP_EMAIL;
-                $mail->Password = $SMTP_PASSWORD; // Consider using environment variables for security
+                $mail->Password = $SMTP_PASSWORD;
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port = $SMTP_PORT;
 
-                // Recipients
+                // Email setup
                 $mail->setFrom('rjmtransportcorp00@gmail.com', 'RJM Transport Corp');
-                $mail->addAddress($email); // Send email to passenger
-
-                // Email Content
+                $mail->addAddress($email);
                 $mail->isHTML(true);
                 $mail->Subject = 'Your E-Ticket Confirmation';
-                $mail->Body = $e_ticket_content;
+                $mail->Body = str_replace('{ticket_number}', $ticket_number, $e_ticket_content);
 
-                // Send the email
                 $mail->send();
 
-                // Send SMS
-                include_once 'send-sms.php';
-                $sms_receiver = $booking_details['mobile_number'];
-                $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Your ticket number is: " . $ticket_number . ". Please check your email for your electronic ticket.";
-                $response = sendSMS($sms_receiver, $sms_message);
-
-                echo json_encode(['success' => true, 'message' => 'E-ticket has been sent successfully and booking status updated. SMS result: ' . htmlspecialchars($response)]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'E-ticket sent, but failed to update booking status.']);
             }
+
+            // Log the action
+            $staff_id = $_SESSION['admin'];
+            $role = "Admin";
+            $action = "Confirmed Booking"; // Define the action taken, e.g., "Booked ticket"
+            $category = "Booking";
+            $date_created = date('Y-m-d H:i:s'); // Current date and time
+
+            $log_query = "INSERT INTO tbllogs (staff_id, action_id, category, role, action, date_created) VALUES (?, ?, ?, ?, ?, ?)";
+            $log_stmt = $conn->prepare($log_query);
+            $log_stmt->bind_param('iissss', $staff_id, $booking_id, $category, $role, $action, $date_created);
+            $log_stmt->execute();
+
+            // Update the database
+            $ticket_number_str = implode(', ', $ticket_numbers);
+            $update_query = "UPDATE tblbooking SET status = 'Confirmed', ticket_number = ? WHERE book_id = ?";
+            $update_stmt = $conn->prepare($update_query);
+            $update_stmt->bind_param('si', $ticket_number_str, $booking_id);
+            $update_stmt->execute();
+
+            // Send SMS
+            include_once 'send-sms.php';
+            $sms_receiver = $booking_details['mobile_number'];
+            $sms_message = "Hello " . $booking_details['fullname'] . ", your bus booking for RJM Transport Corp. was confirmed and accepted. Your ticket number is: " . $ticket_number_str . ". Please check your email for your electronic ticket.";
+            $response = sendSMS($sms_receiver, $sms_message);
+
+            echo json_encode(['success' => true, 'message' => 'E-tickets sent successfully.']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => "Error sending email: {$mail->ErrorInfo}"]);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => "No booking found."]);
+        echo json_encode(['success' => false, 'message' => 'No booking found.']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => "Invalid request method."]);
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
 ?>
